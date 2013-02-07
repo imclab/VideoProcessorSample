@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="2.0" toolsVersion="3084" systemVersion="12C3012" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" initialViewController="2">
+    <dependencies>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="2083"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="5">
+            <objects>
+                <viewController id="2" customClass="ViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="3">
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LPD-wK-NX7">
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="146" id="N40-UU-7uk"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Demo1">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="demo1" destination="2" eventType="touchUpInside" id="CDb-lU-HDE"/>
+                                    <segue destination="B8C-MM-ffl" kind="modal" id="4wx-pX-bag"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Kj-eT-TbO">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Demo2">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="demo2" destination="2" eventType="touchUpInside" id="dmH-IY-1tB"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="VideoProcessorSample" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oA1-xB-1fT">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="21" id="EYo-sH-YnQ"/>
+                                    <constraint firstAttribute="width" constant="254" id="fdQ-wT-4Rv"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="bottom" secondItem="6Kj-eT-TbO" secondAttribute="bottom" constant="218" id="Chg-1S-BfD"/>
+                            <constraint firstItem="LPD-wK-NX7" firstAttribute="trailing" secondItem="6Kj-eT-TbO" secondAttribute="trailing" type="default" id="D4O-Fq-iLd"/>
+                            <constraint firstItem="6Kj-eT-TbO" firstAttribute="leading" secondItem="LPD-wK-NX7" secondAttribute="leading" type="default" id="Ncw-to-eT7"/>
+                            <constraint firstItem="oA1-xB-1fT" firstAttribute="centerX" secondItem="LPD-wK-NX7" secondAttribute="centerX" type="default" id="WcQ-cz-PKy"/>
+                            <constraint firstItem="oA1-xB-1fT" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="Ygp-9x-zcu"/>
+                            <constraint firstItem="oA1-xB-1fT" firstAttribute="top" secondItem="3" secondAttribute="top" constant="79" id="aNE-ww-E8W"/>
+                            <constraint firstItem="LPD-wK-NX7" firstAttribute="top" secondItem="3" secondAttribute="top" constant="193" id="wNf-iW-pGQ"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4" sceneMemberID="firstResponder"/>
+            </objects>
+        </scene>
+        <!--Capture View Controller-->
+        <scene sceneID="HmK-6V-015">
+            <objects>
+                <viewController id="B8C-MM-ffl" customClass="CaptureViewController" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="42m-Bh-1QX">
+                        <rect key="frame" x="0.0" y="20" width="320" height="548"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                        <subviews>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Capture" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZDZ-b4-vlo">
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Default-568h@2x.png" translatesAutoresizingMaskIntoConstraints="NO" id="p1Q-h5-oN0">
+                                <color key="backgroundColor" red="1" green="0.062723582099999994" blue="0.065978366369999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="300" id="loh-gS-5s2"/>
+                                    <constraint firstAttribute="height" constant="300" id="zXA-Nf-Pqg"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="ZDZ-b4-vlo" firstAttribute="centerX" secondItem="42m-Bh-1QX" secondAttribute="centerX" type="default" id="1kO-c8-C3n"/>
+                            <constraint firstItem="p1Q-h5-oN0" firstAttribute="top" secondItem="42m-Bh-1QX" secondAttribute="top" constant="75" id="pho-hK-gT0"/>
+                            <constraint firstItem="p1Q-h5-oN0" firstAttribute="centerX" secondItem="ZDZ-b4-vlo" secondAttribute="centerX" type="default" id="qKN-yG-DRm"/>
+                            <constraint firstItem="ZDZ-b4-vlo" firstAttribute="top" secondItem="42m-Bh-1QX" secondAttribute="top" constant="33" id="uJA-pW-MsZ"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="_imageView" destination="p1Q-h5-oN0" id="gKE-Hp-gJ1"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="nml-gn-7u9" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="638" y="2"/>
+        </scene>
+    </scenes>
+    <resources>
+        <image name="Default-568h@2x.png" width="640" height="1136"/>
+    </resources>
+    <classes>
+        <class className="CaptureViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/CaptureViewController.h"/>
+            <relationships>
+                <relationship kind="outlet" name="_imageView" candidateClass="UIImageView"/>
+            </relationships>
+        </class>
+        <class className="NSLayoutConstraint" superclassName="NSObject">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/NSLayoutConstraint.h"/>
+        </class>
+        <class className="ViewController" superclassName="UIViewController">
+            <source key="sourceIdentifier" type="project" relativePath="./Classes/ViewController.h"/>
+            <relationships>
+                <relationship kind="action" name="demo1"/>
+                <relationship kind="action" name="demo2"/>
+            </relationships>
+        </class>
+    </classes>
+    <simulatedMetricsContainer key="defaultSimulatedMetrics">
+        <simulatedStatusBarMetrics key="statusBar"/>
+        <simulatedOrientationMetrics key="orientation"/>
+        <simulatedScreenMetrics key="destination" type="retina4"/>
+    </simulatedMetricsContainer>
+</document>

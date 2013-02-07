@@ -1,0 +1,31 @@
+//
+// Prefix header for all source files of the 'VideoProcessorSample' target in the 'VideoProcessorSample' project
+//
+
+#import <Availability.h>
+
+#ifndef __IPHONE_5_0
+#warning "This project uses features only available in iOS SDK 5.0 and later."
+#endif
+
+#ifdef __OBJC__
+    #import <UIKit/UIKit.h>
+    #import <Foundation/Foundation.h>
+#endif
+
+// debug
+#ifdef DEBUG
+#define LOG(...) NSLog(__VA_ARGS__)
+#define LOG_METHOD NSLog(@"[METHOD] %@::%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd))
+#define LOG_LINE() NSLog(@"[LINE NUM] %d",__LINE__)
+#else
+#define LOG(...);
+#define LOG_METHOD;
+#define LOG_LINE();
+#endif
+
+// iOS
+#define VERSION [[[UIDevice currentDevice] systemVersion] floatValue]
+#define IS_OS6 (VERSION >= 6.0)
+
+#define IS_RETINA ([[UIScreen mainScreen] scale] == 2.0)
