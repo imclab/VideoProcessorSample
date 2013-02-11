@@ -14,7 +14,9 @@
 }
 
 @property IBOutlet UIImageView * imageView;
+@property IBOutlet UIButton * recBtn;
 
+- (IBAction)rec;
 
 @end
 
@@ -32,9 +34,14 @@
 
 - (void)drawCapture:(UIImage *)image
 {
-    self.view.layer.contents = (id)image.CGImage;
+    _imageView.image = image;
+//    self.view.layer.contents = (id)image.CGImage;
 }
 
+- (IBAction)rec
+{
+    [_videoProcessor rec];
+}
 
 
 #pragma mark - --------------------------------------------------------------------------

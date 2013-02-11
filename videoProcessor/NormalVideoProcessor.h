@@ -36,5 +36,4 @@
 @protocol NormalVideoProcessorDelegate <NSObject>
 
 - (void)drawCapture:(UIImage *)image;
-
 @end

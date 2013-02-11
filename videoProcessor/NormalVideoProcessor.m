@@ -30,12 +30,15 @@
     
     void * bitmap;
     UIImage * imageBuffer;
+    UIImage * dammyImageBuffer;
     
 //	size_t _outputW;
 //	size_t _outputH;
 	size_t width;
 	size_t height;
     
+    CGSize _size;
+    NSURL * _url;
 }
 
 @end
@@ -56,9 +59,9 @@
 }
 
 
+
 #pragma mark - --------------------------------------------------------------------------
 #pragma mark - AVFoundation
-
 
 - (BOOL)setup
 {    
@@ -74,15 +77,13 @@
 	[_videoOut setAlwaysDiscardsLateVideoFrames:YES];
 	[_videoOut setVideoSettings:@{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA)}];
     
-    
 	dispatch_queue_t videoCaptureQueue = dispatch_queue_create("Video Capture Queue", DISPATCH_QUEUE_SERIAL);
 	[_videoOut setSampleBufferDelegate:self queue:videoCaptureQueue];
     
     if ([_captureSession canAddOutput:_videoOut]) [_captureSession addOutput:_videoOut];
 	_videoConnection = [_videoOut connectionWithMediaType:AVMediaTypeVideo];
     _videoConnection.videoMinFrameDuration = CMTimeMake(1, 24);
-    
-//	_videoOrientation = [_videoConnection videoOrientation];
+	_videoOrientation = [_videoConnection videoOrientation];
     
     return YES;
 }
@@ -108,8 +109,6 @@
 }
 
 
-
-
 #pragma mark - --------------------------------------------------------------------------
 #pragma mark - AVFoundation Delegate
 
@@ -120,23 +119,24 @@
     
     if(CVPixelBufferLockBaseAddress(_buffer, 0) == kCVReturnSuccess)
     {
-        uint8_t *base;
-        size_t    bytesPerRow;
+        uint8_t * base;
+        size_t bytesPerRow, w, h;
+        w = CVPixelBufferGetWidth(_buffer);
+        h = CVPixelBufferGetHeight(_buffer);
         base = CVPixelBufferGetBaseAddress(_buffer);
         bytesPerRow = CVPixelBufferGetBytesPerRow(_buffer);
         
         CGColorSpaceRef colorSpace;
         colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef cgContext = CGBitmapContextCreate(
-                                                       base, width, height, 8, bytesPerRow, colorSpace,
+                                                       base, w, h, 8, bytesPerRow, colorSpace,
                                                        kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);
         CGContextSetInterpolationQuality(cgContext, kCGInterpolationLow);
         CGColorSpaceRelease(colorSpace);
         cgImage = CGBitmapContextCreateImage(cgContext);
-        imageBuffer = [UIImage imageWithCGImage:cgImage];
-        
+        imageBuffer = [UIImage imageWithCGImage:cgImage scale:1.0f orientation:UIImageOrientationRight];
+
         CVPixelBufferUnlockBaseAddress(_buffer, 0);
-        
         
         CGContextRelease(cgContext);
         CGImageRelease(cgImage);
@@ -145,18 +145,107 @@
     }
 }
 
+
 - (void)effect
 {
-    [_imageList addObject:imageBuffer];
-    
-    if ([_imageList count] > 135)
+    if (_isRecording)
     {
-        [_imageList removeObjectAtIndex:0];
+        [_imageList addObject:imageBuffer];
+        
+        if ([_imageList count] > 200)
+        {
+            _isRecording = false;
+            [self write];
+            
+//            [_imageList removeObjectAtIndex:0];
+        }
     }
     
     [_delegate drawCapture:imageBuffer];
+    
 }
 
+
+- (CVPixelBufferRef )pixelBufferFromCGImage:(CGImageRef)localImage size:(CGSize)localSize
+{
+    CVPixelBufferRef pxbuffer = NULL;
+    CVReturn status = CVPixelBufferPoolCreatePixelBuffer(NULL, _adaptor.pixelBufferPool, &pxbuffer);
+    NSParameterAssert(status == kCVReturnSuccess && pxbuffer != NULL);
+    
+    CVPixelBufferLockBaseAddress(pxbuffer, 0);
+    
+    void *pxdata = CVPixelBufferGetBaseAddress(pxbuffer);
+    NSParameterAssert(pxdata != NULL);
+    
+    CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
+    
+    CGContextRef context = CGBitmapContextCreate(pxdata, localSize.width, localSize.height, 8, 4 * localSize.width, rgbColorSpace, kCGImageAlphaPremultipliedFirst);
+    NSParameterAssert(context);
+    
+    CGContextSetInterpolationQuality(context, kCGInterpolationLow);
+    CGContextDrawImage(context, CGRectMake(0, 0, CGImageGetWidth(localImage), CGImageGetHeight(localImage)), localImage);
+    
+    CGColorSpaceRelease(rgbColorSpace);
+    CGContextRelease(context);
+    
+    CVPixelBufferUnlockBaseAddress(pxbuffer, 0);
+    
+    //CGImageRelease(localImage);
+    
+    return pxbuffer;
+}
+
+
+- (void)write
+{
+    dispatch_queue_t    dispatchQueue = dispatch_queue_create("mediaInputQueue", NULL);
+    int __block         frame = 0;
+    
+    [_writerInput requestMediaDataWhenReadyOnQueue:dispatchQueue usingBlock:^{
+        while ([_writerInput isReadyForMoreMediaData])
+        {
+            if(++frame >= [_imageList count])
+            {
+                [_writerInput markAsFinished];
+                [_videoWriter finishWriting];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self save];
+                });
+                break;
+            }
+            
+            CVPixelBufferRef buffer = (CVPixelBufferRef)[self pixelBufferFromCGImage:[[_imageList objectAtIndex:frame] CGImage] size:_size];
+            if (buffer)
+            {
+                if(![_adaptor appendPixelBuffer:buffer withPresentationTime:CMTimeMake(frame, 20)])
+                    LOG(@"FAIL");
+                else
+                    LOG(@"Success:%d", frame);
+                
+                CFRelease(buffer);
+            }
+        }
+    }];
+    
+}
+
+- (void)save
+{
+    LOG(@"save!");
+	ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+	[library writeVideoAtPathToSavedPhotosAlbum:_url
+								completionBlock:^(NSURL *assetURL, NSError *error) {
+									LOG(@" >>>>>>>> complete ");
+								}];
+}
+- (void)saveMovieToCameraRoll
+{
+	ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
+	[library writeVideoAtPathToSavedPhotosAlbum:_url
+								completionBlock:^(NSURL *assetURL, NSError *error) {
+									LOG(@" >>>>>>>> complete ");
+								}];
+}
 
 
 
@@ -167,8 +256,8 @@
 {
     LOG_METHOD;
     
-    CGSize _size = CGSizeMake(width, height);
-    NSURL * _url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@_%@%@", NSTemporaryDirectory(), @"output", [NSDate date], @".mov"]];
+    _size = CGSizeMake(width, height);
+    _url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@_%@%@", NSTemporaryDirectory(), @"output", [NSDate date], @".mov"]];
     
     NSError *error = nil;
     _videoWriter = [[AVAssetWriter alloc] initWithURL:_url
@@ -197,7 +286,7 @@
 
 - (void)stop
 {
-    
+    [self write];
 }
 
 

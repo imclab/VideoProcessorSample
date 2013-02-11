@@ -81,23 +81,39 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Default-568h@2x.png" translatesAutoresizingMaskIntoConstraints="NO" id="p1Q-h5-oN0">
-                                <color key="backgroundColor" red="1" green="0.062723582099999994" blue="0.065978366369999999" alpha="1" colorSpace="calibratedRGB"/>
+                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="loh-gS-5s2"/>
-                                    <constraint firstAttribute="height" constant="300" id="zXA-Nf-Pqg"/>
+                                    <constraint firstAttribute="width" constant="300" id="Als-dZ-Ruh"/>
+                                    <constraint firstAttribute="height" constant="400" id="BQO-FQ-ADq"/>
                                 </constraints>
                             </imageView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="la7-fj-95C">
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="REC">
+                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="highlighted">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="rec" destination="B8C-MM-ffl" eventType="touchUpInside" id="d5h-7p-5g9"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstItem="ZDZ-b4-vlo" firstAttribute="centerX" secondItem="42m-Bh-1QX" secondAttribute="centerX" type="default" id="1kO-c8-C3n"/>
-                            <constraint firstItem="p1Q-h5-oN0" firstAttribute="top" secondItem="42m-Bh-1QX" secondAttribute="top" constant="75" id="pho-hK-gT0"/>
-                            <constraint firstItem="p1Q-h5-oN0" firstAttribute="centerX" secondItem="ZDZ-b4-vlo" secondAttribute="centerX" type="default" id="qKN-yG-DRm"/>
-                            <constraint firstItem="ZDZ-b4-vlo" firstAttribute="top" secondItem="42m-Bh-1QX" secondAttribute="top" constant="33" id="uJA-pW-MsZ"/>
+                            <constraint firstItem="ZDZ-b4-vlo" firstAttribute="top" secondItem="42m-Bh-1QX" secondAttribute="top" constant="20" symbolic="YES" type="default" id="77o-Bw-z57"/>
+                            <constraint firstItem="p1Q-h5-oN0" firstAttribute="centerX" secondItem="42m-Bh-1QX" secondAttribute="centerX" type="default" id="Bfe-TM-f8L"/>
+                            <constraint firstItem="ZDZ-b4-vlo" firstAttribute="centerX" secondItem="p1Q-h5-oN0" secondAttribute="centerX" type="default" id="YgI-mW-rZz"/>
+                            <constraint firstAttribute="bottom" secondItem="la7-fj-95C" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="gwE-Ap-7Vz"/>
+                            <constraint firstItem="la7-fj-95C" firstAttribute="centerX" secondItem="p1Q-h5-oN0" secondAttribute="centerX" type="default" id="mYG-8T-Rae"/>
+                            <constraint firstItem="p1Q-h5-oN0" firstAttribute="top" secondItem="42m-Bh-1QX" secondAttribute="top" constant="58" id="ySF-y8-WLJ"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="_imageView" destination="p1Q-h5-oN0" id="gKE-Hp-gJ1"/>
+                        <outlet property="imageView" destination="p1Q-h5-oN0" id="CaX-Hm-SIL"/>
+                        <outlet property="recBtn" destination="la7-fj-95C" id="YSU-dk-Cfc"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nml-gn-7u9" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -112,7 +128,9 @@
         <class className="CaptureViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CaptureViewController.h"/>
             <relationships>
-                <relationship kind="outlet" name="_imageView" candidateClass="UIImageView"/>
+                <relationship kind="action" name="rec"/>
+                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="recBtn" candidateClass="UIButton"/>
             </relationships>
         </class>
         <class className="NSLayoutConstraint" superclassName="NSObject">
