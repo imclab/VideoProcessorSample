@@ -75,18 +75,14 @@
                         <rect key="frame" x="0.0" y="20" width="320" height="548"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BhQ-uV-MNg">
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                            </view>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Capture" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZDZ-b4-vlo">
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" image="Default-568h@2x.png" translatesAutoresizingMaskIntoConstraints="NO" id="p1Q-h5-oN0">
-                                <color key="backgroundColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="Als-dZ-Ruh"/>
-                                    <constraint firstAttribute="height" constant="400" id="BQO-FQ-ADq"/>
-                                </constraints>
-                            </imageView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="la7-fj-95C">
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="REC">
@@ -103,16 +99,18 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstItem="BhQ-uV-MNg" firstAttribute="trailing" secondItem="42m-Bh-1QX" secondAttribute="trailing" type="default" id="25J-Pj-OIv"/>
+                            <constraint firstItem="la7-fj-95C" firstAttribute="centerX" secondItem="ZDZ-b4-vlo" secondAttribute="centerX" type="default" id="521-Ez-pdC"/>
                             <constraint firstItem="ZDZ-b4-vlo" firstAttribute="top" secondItem="42m-Bh-1QX" secondAttribute="top" constant="20" symbolic="YES" type="default" id="77o-Bw-z57"/>
-                            <constraint firstItem="p1Q-h5-oN0" firstAttribute="centerX" secondItem="42m-Bh-1QX" secondAttribute="centerX" type="default" id="Bfe-TM-f8L"/>
-                            <constraint firstItem="ZDZ-b4-vlo" firstAttribute="centerX" secondItem="p1Q-h5-oN0" secondAttribute="centerX" type="default" id="YgI-mW-rZz"/>
-                            <constraint firstAttribute="bottom" secondItem="la7-fj-95C" secondAttribute="bottom" constant="20" symbolic="YES" type="default" id="gwE-Ap-7Vz"/>
-                            <constraint firstItem="la7-fj-95C" firstAttribute="centerX" secondItem="p1Q-h5-oN0" secondAttribute="centerX" type="default" id="mYG-8T-Rae"/>
-                            <constraint firstItem="p1Q-h5-oN0" firstAttribute="top" secondItem="42m-Bh-1QX" secondAttribute="top" constant="58" id="ySF-y8-WLJ"/>
+                            <constraint firstItem="BhQ-uV-MNg" firstAttribute="leading" secondItem="42m-Bh-1QX" secondAttribute="leading" type="default" id="GHy-44-1pY"/>
+                            <constraint firstItem="BhQ-uV-MNg" firstAttribute="bottom" secondItem="42m-Bh-1QX" secondAttribute="bottom" type="default" id="SUF-Jd-Ao5"/>
+                            <constraint firstItem="BhQ-uV-MNg" firstAttribute="centerX" secondItem="ZDZ-b4-vlo" secondAttribute="centerX" type="default" id="eyj-ds-jLI"/>
+                            <constraint firstAttribute="bottom" secondItem="la7-fj-95C" secondAttribute="bottom" constant="12" id="sWu-gA-wfY"/>
+                            <constraint firstItem="BhQ-uV-MNg" firstAttribute="top" secondItem="42m-Bh-1QX" secondAttribute="top" type="default" id="vYX-U5-R6M"/>
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="imageView" destination="p1Q-h5-oN0" id="CaX-Hm-SIL"/>
+                        <outlet property="capture" destination="BhQ-uV-MNg" id="q0c-4e-pvj"/>
                         <outlet property="recBtn" destination="la7-fj-95C" id="YSU-dk-Cfc"/>
                     </connections>
                 </viewController>
@@ -121,15 +119,12 @@
             <point key="canvasLocation" x="638" y="2"/>
         </scene>
     </scenes>
-    <resources>
-        <image name="Default-568h@2x.png" width="640" height="1136"/>
-    </resources>
     <classes>
         <class className="CaptureViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CaptureViewController.h"/>
             <relationships>
                 <relationship kind="action" name="rec"/>
-                <relationship kind="outlet" name="imageView" candidateClass="UIImageView"/>
+                <relationship kind="outlet" name="capture" candidateClass="UIView"/>
                 <relationship kind="outlet" name="recBtn" candidateClass="UIButton"/>
             </relationships>
         </class>

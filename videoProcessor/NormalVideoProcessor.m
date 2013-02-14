@@ -20,21 +20,21 @@
     AVCaptureVideoDataOutput             * _videoOut;
     AVAssetWriterInputPixelBufferAdaptor * _adaptor;
 	AVCaptureVideoOrientation              _videoOrientation;
-    
+
     dispatch_queue_t _movieWritingQueue;
     dispatch_queue_t _dispatchQueue;
-    
+
     BOOL _isRecording;
-    
+
     NSMutableArray * _imageList;
-    
+
     void * bitmap;
     UIImage * imageBuffer;
     UIImage * dammyImageBuffer;
-    
+
 	size_t width;
 	size_t height;
-    
+
     CGSize _size;
     NSURL * _url;
     int _rate;
@@ -52,11 +52,11 @@
     if (self)
     {
         _imageList = [[NSMutableArray alloc] init];
-        width = 640;
-        height = 480;
-        
+        width = 960;
+        height = 540;
+
         _rate = 20;
-        _max_count = 400;
+        _max_count = 200;
     }
     return self;
 }
@@ -66,27 +66,27 @@
 #pragma mark - AVFoundation
 
 - (BOOL)setup
-{    
+{
 	_movieWritingQueue = dispatch_queue_create("Movie Writing Queue", DISPATCH_QUEUE_SERIAL);
-    
+
     _captureSession = [[AVCaptureSession alloc] init];
-    [_captureSession setSessionPreset:AVCaptureSessionPreset640x480];
-    
+    [_captureSession setSessionPreset:AVCaptureSessionPresetiFrame960x540];
+
     _videoIn = [[AVCaptureDeviceInput alloc] initWithDevice:[self videoDeviceWithPosition:AVCaptureDevicePositionBack] error:nil];
     if ([_captureSession canAddInput:_videoIn]) [_captureSession addInput:_videoIn];
-    
+
 	_videoOut = [[AVCaptureVideoDataOutput alloc] init];
 	[_videoOut setAlwaysDiscardsLateVideoFrames:YES];
 	[_videoOut setVideoSettings:@{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32BGRA)}];
-    
+
 	dispatch_queue_t videoCaptureQueue = dispatch_queue_create("Video Capture Queue", DISPATCH_QUEUE_SERIAL);
 	[_videoOut setSampleBufferDelegate:self queue:videoCaptureQueue];
-    
+
     if ([_captureSession canAddOutput:_videoOut]) [_captureSession addOutput:_videoOut];
 	_videoConnection = [_videoOut connectionWithMediaType:AVMediaTypeVideo];
     _videoConnection.videoMinFrameDuration = CMTimeMake(1, _rate);
 	_videoOrientation = [_videoConnection videoOrientation];
-    
+
     return YES;
 }
 
@@ -118,7 +118,7 @@
 {
     CGImageRef cgImage;
     CVImageBufferRef _buffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-    
+
     if(CVPixelBufferLockBaseAddress(_buffer, 0) == kCVReturnSuccess)
     {
         uint8_t * base;
@@ -127,7 +127,7 @@
         h = CVPixelBufferGetHeight(_buffer);
         base = CVPixelBufferGetBaseAddress(_buffer);
         bytesPerRow = CVPixelBufferGetBytesPerRow(_buffer);
-        
+
         CGColorSpaceRef colorSpace;
         colorSpace = CGColorSpaceCreateDeviceRGB();
         CGContextRef cgContext = CGBitmapContextCreate(
@@ -139,10 +139,10 @@
         imageBuffer = [UIImage imageWithCGImage:cgImage scale:1.0f orientation:UIImageOrientationRight];
 
         CVPixelBufferUnlockBaseAddress(_buffer, 0);
-        
+
         CGContextRelease(cgContext);
         CGImageRelease(cgImage);
-        
+
         [self performSelectorOnMainThread:@selector(effect) withObject:nil waitUntilDone:NO];
     }
 }
@@ -153,20 +153,51 @@
     if (_isRecording)
     {
         [_imageList addObject:imageBuffer];
-        
+
         if ([_imageList count] > _max_count)
         {
             _isRecording = false;
             [self write];
-            
-//            [_imageList removeObjectAtIndex:0];
         }
-        
+
         LOG(@"%i", [_imageList count]);
     }
-    
+
     [_delegate drawCapture:imageBuffer];
-    
+
+}
+
+- (void)write
+{
+    dispatch_queue_t    dispatchQueue = dispatch_queue_create("mediaInputQueue", NULL);
+    int __block         i = 0;
+
+    [_writerInput requestMediaDataWhenReadyOnQueue:dispatchQueue usingBlock:^{
+        while ([_writerInput isReadyForMoreMediaData])
+        {
+            if(++i >= [_imageList count])
+            {
+                [_writerInput markAsFinished];
+                [_videoWriter finishWritingWithCompletionHandler:^{
+                    dispatch_async(dispatch_get_main_queue(), ^{
+                        [self save];
+                    });
+                }];
+                break;
+            }
+
+            CVPixelBufferRef _buffer = (CVPixelBufferRef)[self pixelBufferFromCGImage:[[_imageList objectAtIndex:i] CGImage] size:_size];
+            if (_buffer)
+            {
+                if(![_adaptor appendPixelBuffer:_buffer withPresentationTime:CMTimeMake(i, _rate)])
+                    LOG(@"FAIL");
+                else
+                    LOG(@"Success:%d", i);
+
+                CFRelease(_buffer);
+            }
+        }
+    }];
 }
 
 
@@ -193,45 +224,9 @@
     CGContextRelease(context);
     
     CVPixelBufferUnlockBaseAddress(pxbuffer, 0);
-    
-    //CGImageRelease(localImage);
-    
     return pxbuffer;
 }
 
-
-- (void)write
-{
-    dispatch_queue_t    dispatchQueue = dispatch_queue_create("mediaInputQueue", NULL);
-    int __block         frame = 0;
-    
-    [_writerInput requestMediaDataWhenReadyOnQueue:dispatchQueue usingBlock:^{
-        while ([_writerInput isReadyForMoreMediaData])
-        {
-            if(++frame >= [_imageList count])
-            {
-                [_writerInput markAsFinished];
-                [_videoWriter finishWriting];
-                dispatch_async(dispatch_get_main_queue(), ^{
-                    [self save];
-                });
-                break;
-            }
-            
-            CVPixelBufferRef buffer = (CVPixelBufferRef)[self pixelBufferFromCGImage:[[_imageList objectAtIndex:frame] CGImage] size:_size];
-            if (buffer)
-            {
-                if(![_adaptor appendPixelBuffer:buffer withPresentationTime:CMTimeMake(frame, 20)])
-                    LOG(@"FAIL");
-                else
-                    LOG(@"Success:%d", frame);
-                
-                CFRelease(buffer);
-            }
-        }
-    }];
-    
-}
 
 - (void)save
 {
@@ -242,6 +237,10 @@
                                     [self alert:@"Save!" message:nil btnName:@"OK"];
 								}];
 }
+
+
+#pragma mark - --------------------------------------------------------------------------
+#pragma mark - alert
 
 - (void)alert:(NSString *)title message:(NSString *)message btnName:(NSString *)btnName
 {
@@ -254,47 +253,42 @@
 }
 
 
-
 #pragma mark - --------------------------------------------------------------------------
 #pragma mark - Action
 
 - (void)rec
 {
-    LOG_METHOD;
     if (_isRecording) return;
-    
+
     _size = CGSizeMake(width, height);
     _url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@_%@%@", NSTemporaryDirectory(), @"output", [NSDate date], @".mov"]];
-    
+
     NSError *error = nil;
     _videoWriter = [[AVAssetWriter alloc] initWithURL:_url
                                             fileType:AVFileTypeQuickTimeMovie
                                                error:&error];
     if(error) NSLog(@"error = %@", [error localizedDescription]);
-    
+
     NSDictionary *videoSettings = @{AVVideoCodecKey: AVVideoCodecH264,
                                     AVVideoWidthKey: [NSNumber numberWithInt:_size.width],
                                     AVVideoHeightKey: [NSNumber numberWithInt:_size.height]};
     _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
     [_writerInput setExpectsMediaDataInRealTime:YES];
-    
-    NSDictionary *sourcePixelBufferAttributesDictionary = @{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32ARGB)};
-    
+
     CGAffineTransform _transform = CGAffineTransformIdentity;
     _transform = CGAffineTransformTranslate(_transform, _size.width * 0.5, _size.height * 0.5);
     _transform = CGAffineTransformRotate(_transform , 90 / 180.0f * M_PI);
     _transform = CGAffineTransformScale(_transform, 1.0, 1.0);
     _writerInput.transform = _transform;
-    
+
+    NSDictionary *sourcePixelBufferAttributesDictionary = @{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32ARGB)};
     _adaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:_writerInput
                                                                                 sourcePixelBufferAttributes:sourcePixelBufferAttributesDictionary];
-    
     [_videoWriter addInput:_writerInput];
     [_videoWriter startWriting];
     [_videoWriter startSessionAtSourceTime:kCMTimeZero];
     _dispatchQueue = dispatch_queue_create("mediaInputQueue", NULL);
-    
-    
+
     _isRecording = YES;
 }
 
