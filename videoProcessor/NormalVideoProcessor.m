@@ -235,13 +235,24 @@
 
 - (void)save
 {
-    LOG(@"save!");
 	ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
 	[library writeVideoAtPathToSavedPhotosAlbum:_url
 								completionBlock:^(NSURL *assetURL, NSError *error) {
-									LOG(@" >>>>>>>> complete ");
+									LOG(@"Save!");
+                                    [self alert:@"Save!" message:nil btnName:@"OK"];
 								}];
 }
+
+- (void)alert:(NSString *)title message:(NSString *)message btnName:(NSString *)btnName
+{
+    UIAlertView * _alert = [[UIAlertView alloc] initWithTitle:title
+                                                      message:message
+                                                     delegate:nil
+                                            cancelButtonTitle:btnName
+                                            otherButtonTitles:nil];
+	[_alert show];
+}
+
 
 
 #pragma mark - --------------------------------------------------------------------------
@@ -250,6 +261,7 @@
 - (void)rec
 {
     LOG_METHOD;
+    if (_isRecording) return;
     
     _size = CGSizeMake(width, height);
     _url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@_%@%@", NSTemporaryDirectory(), @"output", [NSDate date], @".mov"]];
@@ -264,16 +276,24 @@
                                     AVVideoWidthKey: [NSNumber numberWithInt:_size.width],
                                     AVVideoHeightKey: [NSNumber numberWithInt:_size.height]};
     _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
+    [_writerInput setExpectsMediaDataInRealTime:YES];
     
     NSDictionary *sourcePixelBufferAttributesDictionary = @{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32ARGB)};
     
+    CGAffineTransform _transform = CGAffineTransformIdentity;
+    _transform = CGAffineTransformTranslate(_transform, _size.width * 0.5, _size.height * 0.5);
+    _transform = CGAffineTransformRotate(_transform , 90 / 180.0f * M_PI);
+    _transform = CGAffineTransformScale(_transform, 1.0, 1.0);
+    _writerInput.transform = _transform;
+    
     _adaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:_writerInput
-                                                                               sourcePixelBufferAttributes:sourcePixelBufferAttributesDictionary];
+                                                                                sourcePixelBufferAttributes:sourcePixelBufferAttributesDictionary];
     
     [_videoWriter addInput:_writerInput];
     [_videoWriter startWriting];
     [_videoWriter startSessionAtSourceTime:kCMTimeZero];
     _dispatchQueue = dispatch_queue_create("mediaInputQueue", NULL);
+    
     
     _isRecording = YES;
 }
