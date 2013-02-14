@@ -32,13 +32,13 @@
     UIImage * imageBuffer;
     UIImage * dammyImageBuffer;
     
-//	size_t _outputW;
-//	size_t _outputH;
 	size_t width;
 	size_t height;
     
     CGSize _size;
     NSURL * _url;
+    int _rate;
+    int _max_count;
 }
 
 @end
@@ -54,10 +54,12 @@
         _imageList = [[NSMutableArray alloc] init];
         width = 640;
         height = 480;
+        
+        _rate = 20;
+        _max_count = 400;
     }
     return self;
 }
-
 
 
 #pragma mark - --------------------------------------------------------------------------
@@ -82,7 +84,7 @@
     
     if ([_captureSession canAddOutput:_videoOut]) [_captureSession addOutput:_videoOut];
 	_videoConnection = [_videoOut connectionWithMediaType:AVMediaTypeVideo];
-    _videoConnection.videoMinFrameDuration = CMTimeMake(1, 24);
+    _videoConnection.videoMinFrameDuration = CMTimeMake(1, _rate);
 	_videoOrientation = [_videoConnection videoOrientation];
     
     return YES;
@@ -152,13 +154,15 @@
     {
         [_imageList addObject:imageBuffer];
         
-        if ([_imageList count] > 200)
+        if ([_imageList count] > _max_count)
         {
             _isRecording = false;
             [self write];
             
 //            [_imageList removeObjectAtIndex:0];
         }
+        
+        LOG(@"%i", [_imageList count]);
     }
     
     [_delegate drawCapture:imageBuffer];
@@ -238,15 +242,6 @@
 									LOG(@" >>>>>>>> complete ");
 								}];
 }
-- (void)saveMovieToCameraRoll
-{
-	ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-	[library writeVideoAtPathToSavedPhotosAlbum:_url
-								completionBlock:^(NSURL *assetURL, NSError *error) {
-									LOG(@" >>>>>>>> complete ");
-								}];
-}
-
 
 
 #pragma mark - --------------------------------------------------------------------------
@@ -280,12 +275,12 @@
     [_videoWriter startSessionAtSourceTime:kCMTimeZero];
     _dispatchQueue = dispatch_queue_create("mediaInputQueue", NULL);
     
-    // レコーディング開始
     _isRecording = YES;
 }
 
 - (void)stop
 {
+    _isRecording = false;
     [self write];
 }
 
