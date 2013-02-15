@@ -19,7 +19,6 @@
 
 @interface NormalVideoProcessor : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>
 {
-
 }
 
 @property (weak, nonatomic) id<NormalVideoProcessorDelegate> delegate;

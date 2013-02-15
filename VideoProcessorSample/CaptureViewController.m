@@ -10,12 +10,12 @@
 
 @interface CaptureViewController ()
 {
+    IBOutlet UIView   * _capture;
+    IBOutlet UIButton * _recBtn;
+
     NormalVideoProcessor * _videoProcessor;
     CALayer * _layer;
 }
-
-@property IBOutlet UIView * capture;
-@property IBOutlet UIButton * recBtn;
 
 - (IBAction)rec;
 
@@ -35,9 +35,9 @@
 
 - (void)drawCapture:(UIImage *)image
 {
-    CATransform3D _transform = CATransform3DIdentity;
-    _transform = CATransform3DMakeRotation(M_PI_2, 0.0f, 0.0f, 1.0f);
-    _layer.transform = _transform;
+    CATransform3D transform = CATransform3DIdentity;
+    transform = CATransform3DMakeRotation(M_PI_2, 0.0f, 0.0f, 1.0f);
+    _layer.transform = transform;
     _layer.contents = (id)[image CGImage];
     _layer.frame = CGRectMake(0, 0, 320, 548);
     [_capture.layer addSublayer:_layer ];
@@ -57,12 +57,12 @@
     LOG_METHOD;
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
-    
+
     _layer = [CALayer layer];
-    
+
     _videoProcessor = [[NormalVideoProcessor alloc] init];
     [_videoProcessor setDelegate:self];
-    
+
     if( [_videoProcessor setup] )
     {
         [_videoProcessor startRunning];

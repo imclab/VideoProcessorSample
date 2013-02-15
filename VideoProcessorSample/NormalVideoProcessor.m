@@ -8,33 +8,28 @@
 
 #import "NormalVideoProcessor.h"
 
+#define kVideoWidth 960
+#define kVideoHeight 540
+#define kRate 20
+#define kMaxCount 200
+
 
 @interface NormalVideoProcessor()
 {
     AVAssetWriter                        * _videoWriter;
     AVAssetWriterInput                   * _writerInput;
     AVCaptureSession                     * _captureSession;
-	AVCaptureConnection                  * _audioConnection;
 	AVCaptureConnection                  * _videoConnection;
     AVCaptureDeviceInput                 * _videoIn;
     AVCaptureVideoDataOutput             * _videoOut;
     AVAssetWriterInputPixelBufferAdaptor * _adaptor;
-	AVCaptureVideoOrientation              _videoOrientation;
-
-    dispatch_queue_t _movieWritingQueue;
-    dispatch_queue_t _dispatchQueue;
 
     NSMutableArray * _imageList;
     UIImage        * _imageBuffer;
     NSURL          * _url;
 
-	size_t _width;
-	size_t _height;
     CGSize _size;
-
-    BOOL _isRecording;
-    int  _rate;
-    int  _max_count;
+    BOOL   _isRecording;
 }
 
 @end
@@ -48,11 +43,6 @@
     if (self)
     {
         _imageList = [[NSMutableArray alloc] init];
-        _width  = 960;
-        _height = 540;
-
-        _rate = 20;
-        _max_count = 200;
     }
     return self;
 }
@@ -63,8 +53,6 @@
 
 - (BOOL)setup
 {
-	_movieWritingQueue = dispatch_queue_create("Movie Writing Queue", DISPATCH_QUEUE_SERIAL);
-
     _captureSession = [[AVCaptureSession alloc] init];
     [_captureSession setSessionPreset:AVCaptureSessionPresetiFrame960x540];
 
@@ -80,8 +68,7 @@
 
     if ([_captureSession canAddOutput:_videoOut]) [_captureSession addOutput:_videoOut];
 	_videoConnection = [_videoOut connectionWithMediaType:AVMediaTypeVideo];
-    _videoConnection.videoMinFrameDuration = CMTimeMake(1, _rate);
-	_videoOrientation = [_videoConnection videoOrientation];
+    _videoConnection.videoMinFrameDuration = CMTimeMake(1, kRate);
 
     return YES;
 }
@@ -96,60 +83,12 @@
     return nil;
 }
 
-- (void)startRunning
-{
-    if (!_isRecording) [_captureSession startRunning];
-}
-
-- (void)stopRunning
-{
-    if (_isRecording) [_captureSession stopRunning];
-}
-
-
-#pragma mark - --------------------------------------------------------------------------
-#pragma mark - AVFoundation Delegate
-
-- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
-{
-    CGImageRef cgImage;
-    CVImageBufferRef _buffer = CMSampleBufferGetImageBuffer(sampleBuffer);
-
-    if(CVPixelBufferLockBaseAddress(_buffer, 0) == kCVReturnSuccess)
-    {
-        uint8_t * base;
-        size_t bytesPerRow, w, h;
-        w = CVPixelBufferGetWidth(_buffer);
-        h = CVPixelBufferGetHeight(_buffer);
-        base = CVPixelBufferGetBaseAddress(_buffer);
-        bytesPerRow = CVPixelBufferGetBytesPerRow(_buffer);
-
-        CGColorSpaceRef colorSpace;
-        colorSpace = CGColorSpaceCreateDeviceRGB();
-        CGContextRef cgContext = CGBitmapContextCreate(
-                                                       base, w, h, 8, bytesPerRow, colorSpace,
-                                                       kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);
-        CGContextSetInterpolationQuality(cgContext, kCGInterpolationLow);
-        CGColorSpaceRelease(colorSpace);
-        cgImage = CGBitmapContextCreateImage(cgContext);
-        _imageBuffer = [UIImage imageWithCGImage:cgImage scale:1.0f orientation:UIImageOrientationRight];
-
-        CVPixelBufferUnlockBaseAddress(_buffer, 0);
-
-        CGContextRelease(cgContext);
-        CGImageRelease(cgImage);
-
-        [self performSelectorOnMainThread:@selector(effect) withObject:nil waitUntilDone:NO];
-    }
-}
-
-
 - (void)effect
 {
     if (_isRecording)
     {
         [_imageList addObject:_imageBuffer];
-        if ([_imageList count] > _max_count)
+        if ([_imageList count] > kMaxCount)
         {
             _isRecording = false;
             [self write];
@@ -178,17 +117,19 @@
                 }];
                 return;
             }
-            CVPixelBufferRef _buffer = (CVPixelBufferRef)[self pixelBufferFromCGImage:[[_imageList objectAtIndex:i] CGImage] size:_size];
-            if (_buffer)
+            CVPixelBufferRef buffer = (CVPixelBufferRef)[self pixelBufferFromCGImage:[[_imageList objectAtIndex:i] CGImage] size:_size];
+            if (buffer)
             {
-                if(![_adaptor appendPixelBuffer:_buffer withPresentationTime:CMTimeMake(i, _rate)]) LOG(@"Fail");
-                else LOG(@"Success : %d", i);
-                CFRelease(_buffer);
+                if([_adaptor appendPixelBuffer:buffer withPresentationTime:CMTimeMake(i, kRate)]) LOG(@"Success : %d", i);
+                else
+                {
+                    [self alert:@"Fail" message:nil btnName:@"OK"];
+                }
+                CFRelease(buffer);
             }
         }
     }];
 }
-
 
 - (CVPixelBufferRef )pixelBufferFromCGImage:(CGImageRef)localImage size:(CGSize)localSize
 {
@@ -216,15 +157,43 @@
     return pxbuffer;
 }
 
+- (void)startRunning { if (!_isRecording) [_captureSession startRunning]; }
+- (void)stopRunning { if (_isRecording) [_captureSession stopRunning]; }
 
-- (void)save
+
+#pragma mark - --------------------------------------------------------------------------
+#pragma mark - AVFoundation Delegate
+
+- (void)captureOutput:(AVCaptureOutput *)captureOutput didOutputSampleBuffer:(CMSampleBufferRef)sampleBuffer fromConnection:(AVCaptureConnection *)connection
 {
-	ALAssetsLibrary *library = [[ALAssetsLibrary alloc] init];
-	[library writeVideoAtPathToSavedPhotosAlbum:_url
-								completionBlock:^(NSURL *assetURL, NSError *error) {
-									LOG(@"Save!");
-                                    [self alert:@"Save!" message:nil btnName:@"OK"];
-								}];
+    CGImageRef cgImage;
+    CVImageBufferRef buffer = CMSampleBufferGetImageBuffer(sampleBuffer);
+
+    if(CVPixelBufferLockBaseAddress(buffer, 0) == kCVReturnSuccess) // lock
+    {
+        uint8_t * base;
+        size_t bytesPerRow, w, h;
+        w = CVPixelBufferGetWidth(buffer);
+        h = CVPixelBufferGetHeight(buffer);
+        base = CVPixelBufferGetBaseAddress(buffer);
+        bytesPerRow = CVPixelBufferGetBytesPerRow(buffer);
+
+        CGColorSpaceRef colorSpace;
+        colorSpace = CGColorSpaceCreateDeviceRGB();
+        CGContextRef cgContext = CGBitmapContextCreate(base, w, h, 8, bytesPerRow, colorSpace, kCGBitmapByteOrder32Little | kCGImageAlphaPremultipliedFirst);
+        CGContextSetInterpolationQuality(cgContext, kCGInterpolationLow);
+        CGColorSpaceRelease(colorSpace);
+        cgImage = CGBitmapContextCreateImage(cgContext);
+
+        _imageBuffer = [UIImage imageWithCGImage:cgImage scale:1.0f orientation:UIImageOrientationRight];
+
+        CVPixelBufferUnlockBaseAddress(buffer, 0); // unlock
+
+        CGContextRelease(cgContext);
+        CGImageRelease(cgImage);
+
+        [self performSelectorOnMainThread:@selector(effect) withObject:nil waitUntilDone:NO];
+    }
 }
 
 
@@ -235,34 +204,32 @@
 {
     if (_isRecording) return;
 
-    _size = CGSizeMake(_width, _height);
+    _size = CGSizeMake(kVideoWidth, kVideoHeight);
     _url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@_%@%@", NSTemporaryDirectory(), @"output", [NSDate date], @".mov"]];
 
-    NSError *error = nil;
-    _videoWriter = [[AVAssetWriter alloc] initWithURL:_url
-                                            fileType:AVFileTypeQuickTimeMovie
-                                               error:&error];
-    if(error) NSLog(@"error = %@", [error localizedDescription]);
+    NSError * error = nil;
+    _videoWriter = [[AVAssetWriter alloc] initWithURL:_url fileType:AVFileTypeQuickTimeMovie error:&error];
+    if(error) NSLog(@"error : %@", [error localizedDescription]);
 
-    NSDictionary *videoSettings = @{AVVideoCodecKey: AVVideoCodecH264,
-                                    AVVideoWidthKey: [NSNumber numberWithInt:_size.width],
-                                    AVVideoHeightKey: [NSNumber numberWithInt:_size.height]};
+    NSDictionary * videoSettings = @{AVVideoCodecKey: AVVideoCodecH264,
+                                      AVVideoWidthKey: [NSNumber numberWithInt:_size.width],
+                                      AVVideoHeightKey: [NSNumber numberWithInt:_size.height]};
+
     _writerInput = [AVAssetWriterInput assetWriterInputWithMediaType:AVMediaTypeVideo outputSettings:videoSettings];
     [_writerInput setExpectsMediaDataInRealTime:YES];
 
-    CGAffineTransform _transform = CGAffineTransformIdentity;
-    _transform = CGAffineTransformTranslate(_transform, _size.width * 0.5, _size.height * 0.5);
-    _transform = CGAffineTransformRotate(_transform , 90 / 180.0f * M_PI);
-    _transform = CGAffineTransformScale(_transform, 1.0, 1.0);
-    _writerInput.transform = _transform;
+    CGAffineTransform transform = CGAffineTransformIdentity;
+    transform = CGAffineTransformTranslate(transform, _size.width * 0.5, _size.height * 0.5);
+    transform = CGAffineTransformRotate(transform , 90 / 180.0f * M_PI);
+    transform = CGAffineTransformScale(transform, 1.0, 1.0);
+    _writerInput.transform = transform;
 
-    NSDictionary *sourcePixelBufferAttributesDictionary = @{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32ARGB)};
+    NSDictionary * sourcePixelBufferAttributesDictionary = @{(id)kCVPixelBufferPixelFormatTypeKey: @(kCVPixelFormatType_32ARGB)};
     _adaptor = [AVAssetWriterInputPixelBufferAdaptor assetWriterInputPixelBufferAdaptorWithAssetWriterInput:_writerInput
                                                                                 sourcePixelBufferAttributes:sourcePixelBufferAttributesDictionary];
     [_videoWriter addInput:_writerInput];
     [_videoWriter startWriting];
     [_videoWriter startSessionAtSourceTime:kCMTimeZero];
-    _dispatchQueue = dispatch_queue_create("mediaInputQueue", NULL);
     _isRecording = YES;
 }
 
@@ -274,17 +241,22 @@
 
 
 #pragma mark - --------------------------------------------------------------------------
-#pragma mark - util
+#pragma mark - utils
 
 - (void)alert:(NSString *)title message:(NSString *)message btnName:(NSString *)btnName
 {
-    UIAlertView * _alert = [[UIAlertView alloc] initWithTitle:title
-                                                      message:message
-                                                     delegate:nil
-                                            cancelButtonTitle:btnName
-                                            otherButtonTitles:nil];
-	[_alert show];
+    [[[UIAlertView alloc] initWithTitle:title message:message delegate:nil cancelButtonTitle:btnName otherButtonTitles:nil] show];
 }
+
+- (void)save
+{
+	ALAssetsLibrary * library = [[ALAssetsLibrary alloc] init];
+	[library writeVideoAtPathToSavedPhotosAlbum:_url
+                                 completionBlock:^(NSURL *assetURL, NSError *error){
+                                     [self alert:@"Save!" message:nil btnName:@"OK"];
+                                 }];
+}
+
 
 
 @end

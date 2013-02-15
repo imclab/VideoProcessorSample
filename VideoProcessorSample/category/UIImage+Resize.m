@@ -10,7 +10,7 @@
 
 
 #pragma mark - --------------------------------------------------------------------------
-#pragma mark - resize - public
+#pragma mark - resize
 
 + (UIImage *)resize:(UIImage *)image width:(CGFloat)width
 {
@@ -45,20 +45,16 @@
     return [UIImage resize:image rect:resizedRect];
 }
 
-
-#pragma mark - --------------------------------------------------------------------------
-#pragma mark - resize - private
-
 + (UIImage *)resize:(UIImage *)image rect:(CGRect)rect
 {
     UIGraphicsBeginImageContextWithOptions(CGSizeMake(rect.size.width, rect.size.height), YES, 0);
     CGContextRef context = UIGraphicsGetCurrentContext();
     CGContextSetInterpolationQuality(context, kCGInterpolationHigh);
     [image drawInRect:rect];
-    UIImage * _image = UIGraphicsGetImageFromCurrentImageContext();
+    UIImage * resizeImage = UIGraphicsGetImageFromCurrentImageContext();
     UIGraphicsEndImageContext();
    
-    return _image;
+    return resizeImage;
 }
 
 
@@ -69,10 +65,10 @@
 + (UIImage *)crop:(UIImage *)image rect:(CGRect)rect
 {
     CGImageRef imageRef = CGImageCreateWithImageInRect([image CGImage], rect);
-    UIImage * _image = [UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation];
+    UIImage * cropImage = [UIImage imageWithCGImage:imageRef scale:image.scale orientation:image.imageOrientation];
     CGImageRelease(imageRef);
     
-    return _image;
+    return cropImage;
 }
 
 

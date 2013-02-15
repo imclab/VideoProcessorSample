@@ -110,8 +110,8 @@
                         </constraints>
                     </view>
                     <connections>
-                        <outlet property="capture" destination="BhQ-uV-MNg" id="q0c-4e-pvj"/>
-                        <outlet property="recBtn" destination="la7-fj-95C" id="YSU-dk-Cfc"/>
+                        <outlet property="_capture" destination="BhQ-uV-MNg" id="EYK-m9-b3c"/>
+                        <outlet property="_recBtn" destination="la7-fj-95C" id="pqD-bm-eLj"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nml-gn-7u9" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -124,8 +124,8 @@
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CaptureViewController.h"/>
             <relationships>
                 <relationship kind="action" name="rec"/>
-                <relationship kind="outlet" name="capture" candidateClass="UIView"/>
-                <relationship kind="outlet" name="recBtn" candidateClass="UIButton"/>
+                <relationship kind="outlet" name="_capture" candidateClass="UIView"/>
+                <relationship kind="outlet" name="_recBtn" candidateClass="UIButton"/>
             </relationships>
         </class>
         <class className="NSLayoutConstraint" superclassName="NSObject">
