@@ -19,7 +19,6 @@
 		FE6A8EA616C2AAC00042C66A /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE6A8EA516C2AAC00042C66A /* Default-568h@2x.png */; };
 		FE6A8EA916C2AAC00042C66A /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FE6A8EA716C2AAC00042C66A /* MainStoryboard.storyboard */; };
 		FE6A8EAC16C2AAC00042C66A /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6A8EAB16C2AAC00042C66A /* ViewController.m */; };
-		FE6A8EB516C2AFCA0042C66A /* NormalVideoProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6A8EB416C2AFCA0042C66A /* NormalVideoProcessor.m */; };
 		FE6A8EB816C2B0060042C66A /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE6A8EB716C2B0060042C66A /* AVFoundation.framework */; };
 		FE6A8EBA16C2B03F0042C66A /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE6A8EB916C2B03F0042C66A /* CoreMedia.framework */; };
 		FE6A8EBC16C2B0470042C66A /* CoreAudio.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE6A8EBB16C2B0460042C66A /* CoreAudio.framework */; };
@@ -27,6 +26,7 @@
 		FE6A8EC116C2CE440042C66A /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE6A8EC016C2CE440042C66A /* CoreVideo.framework */; };
 		FE6A8EC416C2D41D0042C66A /* CaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6A8EC316C2D41D0042C66A /* CaptureViewController.m */; };
 		FE82B6EE16C91FEC0044111D /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = FE82B6ED16C91FEC0044111D /* UIImage+Resize.m */; };
+		FE82ECAB16CE775F00AA04B8 /* NormalVideoProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = FE82ECAA16CE775F00AA04B8 /* NormalVideoProcessor.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -47,8 +47,6 @@
 		FE6A8EA816C2AAC00042C66A /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
 		FE6A8EAA16C2AAC00042C66A /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		FE6A8EAB16C2AAC00042C66A /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		FE6A8EB316C2AFCA0042C66A /* NormalVideoProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NormalVideoProcessor.h; path = videoProcessor/NormalVideoProcessor.h; sourceTree = SOURCE_ROOT; };
-		FE6A8EB416C2AFCA0042C66A /* NormalVideoProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = NormalVideoProcessor.m; path = videoProcessor/NormalVideoProcessor.m; sourceTree = SOURCE_ROOT; };
 		FE6A8EB716C2B0060042C66A /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		FE6A8EB916C2B03F0042C66A /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		FE6A8EBB16C2B0460042C66A /* CoreAudio.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreAudio.framework; path = System/Library/Frameworks/CoreAudio.framework; sourceTree = SDKROOT; };
@@ -58,6 +56,8 @@
 		FE6A8EC316C2D41D0042C66A /* CaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureViewController.m; sourceTree = "<group>"; };
 		FE82B6EC16C91FEC0044111D /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Resize.h"; path = "category/UIImage+Resize.h"; sourceTree = "<group>"; };
 		FE82B6ED16C91FEC0044111D /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Resize.m"; path = "category/UIImage+Resize.m"; sourceTree = "<group>"; };
+		FE82ECA916CE775F00AA04B8 /* NormalVideoProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NormalVideoProcessor.h; sourceTree = "<group>"; };
+		FE82ECAA16CE775F00AA04B8 /* NormalVideoProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NormalVideoProcessor.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -147,8 +147,8 @@
 		FE6A8EB216C2AF6B0042C66A /* model */ = {
 			isa = PBXGroup;
 			children = (
-				FE6A8EB316C2AFCA0042C66A /* NormalVideoProcessor.h */,
-				FE6A8EB416C2AFCA0042C66A /* NormalVideoProcessor.m */,
+				FE82ECA916CE775F00AA04B8 /* NormalVideoProcessor.h */,
+				FE82ECAA16CE775F00AA04B8 /* NormalVideoProcessor.m */,
 			);
 			name = model;
 			sourceTree = "<group>";
@@ -231,9 +231,9 @@
 				FE6A8E9C16C2AAC00042C66A /* main.m in Sources */,
 				FE6A8EA016C2AAC00042C66A /* AppDelegate.m in Sources */,
 				FE6A8EAC16C2AAC00042C66A /* ViewController.m in Sources */,
-				FE6A8EB516C2AFCA0042C66A /* NormalVideoProcessor.m in Sources */,
 				FE6A8EC416C2D41D0042C66A /* CaptureViewController.m in Sources */,
 				FE82B6EE16C91FEC0044111D /* UIImage+Resize.m in Sources */,
+				FE82ECAB16CE775F00AA04B8 /* NormalVideoProcessor.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

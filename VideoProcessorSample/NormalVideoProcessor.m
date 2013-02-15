@@ -24,21 +24,17 @@
     dispatch_queue_t _movieWritingQueue;
     dispatch_queue_t _dispatchQueue;
 
-    BOOL _isRecording;
-
     NSMutableArray * _imageList;
+    UIImage        * _imageBuffer;
+    NSURL          * _url;
 
-    void * bitmap;
-    UIImage * imageBuffer;
-    UIImage * dammyImageBuffer;
-
-	size_t width;
-	size_t height;
-
+	size_t _width;
+	size_t _height;
     CGSize _size;
-    NSURL * _url;
-    int _rate;
-    int _max_count;
+
+    BOOL _isRecording;
+    int  _rate;
+    int  _max_count;
 }
 
 @end
@@ -52,8 +48,8 @@
     if (self)
     {
         _imageList = [[NSMutableArray alloc] init];
-        width = 960;
-        height = 540;
+        _width  = 960;
+        _height = 540;
 
         _rate = 20;
         _max_count = 200;
@@ -136,7 +132,7 @@
         CGContextSetInterpolationQuality(cgContext, kCGInterpolationLow);
         CGColorSpaceRelease(colorSpace);
         cgImage = CGBitmapContextCreateImage(cgContext);
-        imageBuffer = [UIImage imageWithCGImage:cgImage scale:1.0f orientation:UIImageOrientationRight];
+        _imageBuffer = [UIImage imageWithCGImage:cgImage scale:1.0f orientation:UIImageOrientationRight];
 
         CVPixelBufferUnlockBaseAddress(_buffer, 0);
 
@@ -152,25 +148,22 @@
 {
     if (_isRecording)
     {
-        [_imageList addObject:imageBuffer];
-
+        [_imageList addObject:_imageBuffer];
         if ([_imageList count] > _max_count)
         {
             _isRecording = false;
             [self write];
         }
-
-        LOG(@"%i", [_imageList count]);
+        LOG(@"image count : %d", [_imageList count]);
     }
-
-    [_delegate drawCapture:imageBuffer];
-
+    [_delegate drawCapture:_imageBuffer];
 }
+
 
 - (void)write
 {
-    dispatch_queue_t    dispatchQueue = dispatch_queue_create("mediaInputQueue", NULL);
-    int __block         i = 0;
+    dispatch_queue_t dispatchQueue = dispatch_queue_create("mediaInputQueue", NULL);
+    int __block i = 0;
 
     [_writerInput requestMediaDataWhenReadyOnQueue:dispatchQueue usingBlock:^{
         while ([_writerInput isReadyForMoreMediaData])
@@ -183,17 +176,13 @@
                         [self save];
                     });
                 }];
-                break;
+                return;
             }
-
             CVPixelBufferRef _buffer = (CVPixelBufferRef)[self pixelBufferFromCGImage:[[_imageList objectAtIndex:i] CGImage] size:_size];
             if (_buffer)
             {
-                if(![_adaptor appendPixelBuffer:_buffer withPresentationTime:CMTimeMake(i, _rate)])
-                    LOG(@"FAIL");
-                else
-                    LOG(@"Success:%d", i);
-
+                if(![_adaptor appendPixelBuffer:_buffer withPresentationTime:CMTimeMake(i, _rate)]) LOG(@"Fail");
+                else LOG(@"Success : %d", i);
                 CFRelease(_buffer);
             }
         }
@@ -206,23 +195,23 @@
     CVPixelBufferRef pxbuffer = NULL;
     CVReturn status = CVPixelBufferPoolCreatePixelBuffer(NULL, _adaptor.pixelBufferPool, &pxbuffer);
     NSParameterAssert(status == kCVReturnSuccess && pxbuffer != NULL);
-    
+
     CVPixelBufferLockBaseAddress(pxbuffer, 0);
-    
+
     void *pxdata = CVPixelBufferGetBaseAddress(pxbuffer);
     NSParameterAssert(pxdata != NULL);
-    
+
     CGColorSpaceRef rgbColorSpace = CGColorSpaceCreateDeviceRGB();
-    
+
     CGContextRef context = CGBitmapContextCreate(pxdata, localSize.width, localSize.height, 8, 4 * localSize.width, rgbColorSpace, kCGImageAlphaPremultipliedFirst);
     NSParameterAssert(context);
-    
+
     CGContextSetInterpolationQuality(context, kCGInterpolationLow);
     CGContextDrawImage(context, CGRectMake(0, 0, CGImageGetWidth(localImage), CGImageGetHeight(localImage)), localImage);
-    
+
     CGColorSpaceRelease(rgbColorSpace);
     CGContextRelease(context);
-    
+
     CVPixelBufferUnlockBaseAddress(pxbuffer, 0);
     return pxbuffer;
 }
@@ -240,27 +229,13 @@
 
 
 #pragma mark - --------------------------------------------------------------------------
-#pragma mark - alert
-
-- (void)alert:(NSString *)title message:(NSString *)message btnName:(NSString *)btnName
-{
-    UIAlertView * _alert = [[UIAlertView alloc] initWithTitle:title
-                                                      message:message
-                                                     delegate:nil
-                                            cancelButtonTitle:btnName
-                                            otherButtonTitles:nil];
-	[_alert show];
-}
-
-
-#pragma mark - --------------------------------------------------------------------------
 #pragma mark - Action
 
 - (void)rec
 {
     if (_isRecording) return;
 
-    _size = CGSizeMake(width, height);
+    _size = CGSizeMake(_width, _height);
     _url = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@_%@%@", NSTemporaryDirectory(), @"output", [NSDate date], @".mov"]];
 
     NSError *error = nil;
@@ -288,7 +263,6 @@
     [_videoWriter startWriting];
     [_videoWriter startSessionAtSourceTime:kCMTimeZero];
     _dispatchQueue = dispatch_queue_create("mediaInputQueue", NULL);
-
     _isRecording = YES;
 }
 
@@ -296,6 +270,20 @@
 {
     _isRecording = false;
     [self write];
+}
+
+
+#pragma mark - --------------------------------------------------------------------------
+#pragma mark - util
+
+- (void)alert:(NSString *)title message:(NSString *)message btnName:(NSString *)btnName
+{
+    UIAlertView * _alert = [[UIAlertView alloc] initWithTitle:title
+                                                      message:message
+                                                     delegate:nil
+                                            cancelButtonTitle:btnName
+                                            otherButtonTitles:nil];
+	[_alert show];
 }
 
 
