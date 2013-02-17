@@ -10,7 +10,6 @@
 
 @interface ViewController ()
 
-
 - (IBAction)demo1;
 - (IBAction)demo2;
 
@@ -20,7 +19,7 @@
 
 
 #pragma mark - --------------------------------------------------------------------------
-#pragma mark - IBAction
+#pragma mark - Action
 
 - (IBAction)demo1
 {
@@ -30,6 +29,12 @@
 - (IBAction)demo2
 {
     LOG_METHOD;
+}
+
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    CaptureViewController * _vc = (CaptureViewController *)[segue destinationViewController];
+    _vc.demo = [segue identifier];
 }
 
 

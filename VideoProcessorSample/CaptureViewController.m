@@ -13,7 +13,9 @@
     IBOutlet UIView   * capture_;
     IBOutlet UIButton * recBtn_;
 
-    NormalVideoProcessor * videoProcessor_;
+    NormalVideoProcessor    * normalVideoProcessor_;
+    FastWriteVideoProcessor * fastWriterVideoProcessor_;
+    BaseVideoProcessor      * videoProcessor_;
     CALayer * layer_;
 }
 
@@ -40,8 +42,12 @@
     layer_.transform = transform;
     layer_.contents = (id)[image CGImage];
     layer_.frame = CGRectMake(0, 0, 320, 548);
-    [capture_.layer addSublayer:layer_ ];
+    [capture_.layer addSublayer:layer_];
 }
+
+
+#pragma mark - --------------------------------------------------------------------------
+#pragma mark - Action
 
 - (IBAction)rec
 {
@@ -54,25 +60,29 @@
 
 - (void)viewDidLoad
 {
-    LOG_METHOD;
     [super viewDidLoad];
 	// Do any additional setup after loading the view.
 
     layer_ = [CALayer layer];
 
-    videoProcessor_ = [[NormalVideoProcessor alloc] init];
-    [videoProcessor_ setDelegate:self];
-
-    if( [videoProcessor_ setup] )
+    if ( [_demo isEqualToString:@"Demo1"] )
     {
-        [videoProcessor_ startRunning];
+        videoProcessor_ = [[NormalVideoProcessor alloc] init];
+        [(NormalVideoProcessor *)videoProcessor_ setDelegate:self];
     }
+    else
+    {
+        videoProcessor_ = [[FastWriteVideoProcessor alloc] init];
+        [(FastWriteVideoProcessor *)videoProcessor_ setDelegate:self];
+    }
+
+    if( [videoProcessor_ setup] ) { [videoProcessor_ startRunning]; }
 }
 
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    // Dispose of any resources that can be recreated.
+    [videoProcessor_ stop];
 }
 
 @end

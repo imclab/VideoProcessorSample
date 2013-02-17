@@ -1,12 +1,12 @@
 //
-//  NormalVideoProcessor.m
+//  FastWriteVideoProcessor.m
 //  VideoProcessorSample
 //
 //  Created by hirofumi kaneko on 2013/02/07.
 //  Copyright (c) 2013年 hirofumi kaneko. All rights reserved.
 //
 
-#import "NormalVideoProcessor.h"
+#import "FastWriteVideoProcessor.h"
 
 #define kVideoWidth 960
 #define kVideoHeight 540
@@ -14,7 +14,7 @@
 #define kMaxCount 120
 
 
-@interface NormalVideoProcessor()
+@interface FastWriteVideoProcessor()
 {
     AVAssetWriter                        * videoWriter_;
     AVAssetWriterInput                   * writerInput_;
@@ -35,7 +35,7 @@
 @end
 
 
-@implementation NormalVideoProcessor
+@implementation FastWriteVideoProcessor
 
 - (id)init
 {

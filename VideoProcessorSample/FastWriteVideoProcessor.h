@@ -1,5 +1,5 @@
 //
-//  NormalVideoProcessor.h
+//  FastWriteVideoProcessor.h
 //  VideoProcessorSample
 //
 //  Created by hirofumi kaneko on 2013/02/07.
@@ -15,14 +15,13 @@
 #import <CoreMedia/CoreMedia.h>
 #import "BaseVideoProcessor.h"
 
+@protocol FastWriteVideoProcessorDelegate;
 
-@protocol NormalVideoProcessorDelegate;
-
-@interface NormalVideoProcessor : BaseVideoProcessor <AVCaptureVideoDataOutputSampleBufferDelegate>
+@interface FastWriteVideoProcessor : BaseVideoProcessor <AVCaptureVideoDataOutputSampleBufferDelegate>
 {
 }
 
-@property (weak, nonatomic) id<NormalVideoProcessorDelegate> delegate;
+@property (weak, nonatomic) id<FastWriteVideoProcessorDelegate> delegate;
 
 - (BOOL)setup;
 - (void)rec;
@@ -33,7 +32,7 @@
 
 @end
 
-@protocol NormalVideoProcessorDelegate <NSObject>
+@protocol FastWriteVideoProcessorDelegate <NSObject>
 
 - (void)drawCapture:(UIImage *)image;
 

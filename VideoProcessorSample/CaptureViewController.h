@@ -8,8 +8,12 @@
 
 #import <UIKit/UIKit.h>
 #import "NormalVideoProcessor.h"
+#import "FastWriteVideoProcessor.h"
 
-@interface CaptureViewController : UIViewController <NormalVideoProcessorDelegate>
+@interface CaptureViewController : UIViewController <NormalVideoProcessorDelegate, FastWriteVideoProcessorDelegate>
+{
+}
 
+@property NSString * demo;
 
 @end

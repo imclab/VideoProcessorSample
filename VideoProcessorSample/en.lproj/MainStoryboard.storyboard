@@ -26,7 +26,7 @@
                                 </state>
                                 <connections>
                                     <action selector="demo1" destination="2" eventType="touchUpInside" id="CDb-lU-HDE"/>
-                                    <segue destination="B8C-MM-ffl" kind="modal" id="4wx-pX-bag"/>
+                                    <segue destination="B8C-MM-ffl" kind="modal" identifier="Demo1" animates="NO" id="4wx-pX-bag"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Kj-eT-TbO">
@@ -40,6 +40,7 @@
                                 </state>
                                 <connections>
                                     <action selector="demo2" destination="2" eventType="touchUpInside" id="dmH-IY-1tB"/>
+                                    <segue destination="B8C-MM-ffl" kind="modal" identifier="Demo2" animates="NO" id="El9-nb-2HH"/>
                                 </connections>
                             </button>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="VideoProcessorSample" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oA1-xB-1fT">
@@ -78,11 +79,6 @@
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="BhQ-uV-MNg">
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="Capture" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZDZ-b4-vlo">
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="la7-fj-95C">
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
                                 <state key="normal" title="REC">
@@ -100,11 +96,9 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="BhQ-uV-MNg" firstAttribute="trailing" secondItem="42m-Bh-1QX" secondAttribute="trailing" type="default" id="25J-Pj-OIv"/>
-                            <constraint firstItem="la7-fj-95C" firstAttribute="centerX" secondItem="ZDZ-b4-vlo" secondAttribute="centerX" type="default" id="521-Ez-pdC"/>
-                            <constraint firstItem="ZDZ-b4-vlo" firstAttribute="top" secondItem="42m-Bh-1QX" secondAttribute="top" constant="20" symbolic="YES" type="default" id="77o-Bw-z57"/>
                             <constraint firstItem="BhQ-uV-MNg" firstAttribute="leading" secondItem="42m-Bh-1QX" secondAttribute="leading" type="default" id="GHy-44-1pY"/>
                             <constraint firstItem="BhQ-uV-MNg" firstAttribute="bottom" secondItem="42m-Bh-1QX" secondAttribute="bottom" type="default" id="SUF-Jd-Ao5"/>
-                            <constraint firstItem="BhQ-uV-MNg" firstAttribute="centerX" secondItem="ZDZ-b4-vlo" secondAttribute="centerX" type="default" id="eyj-ds-jLI"/>
+                            <constraint firstItem="la7-fj-95C" firstAttribute="centerX" secondItem="BhQ-uV-MNg" secondAttribute="centerX" type="default" id="U3e-nd-dgS"/>
                             <constraint firstAttribute="bottom" secondItem="la7-fj-95C" secondAttribute="bottom" constant="12" id="sWu-gA-wfY"/>
                             <constraint firstItem="BhQ-uV-MNg" firstAttribute="top" secondItem="42m-Bh-1QX" secondAttribute="top" type="default" id="vYX-U5-R6M"/>
                         </constraints>
@@ -116,7 +110,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nml-gn-7u9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="638" y="2"/>
+            <point key="canvasLocation" x="790" y="-2"/>
         </scene>
     </scenes>
     <classes>
@@ -144,4 +138,7 @@
         <simulatedOrientationMetrics key="orientation"/>
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
+    <inferredMetricsTieBreakers>
+        <segue reference="El9-nb-2HH"/>
+    </inferredMetricsTieBreakers>
 </document>

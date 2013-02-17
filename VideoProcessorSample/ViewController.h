@@ -7,10 +7,11 @@
 //
 
 #import <UIKit/UIKit.h>
-
 #import "NormalVideoProcessor.h"
-
+#import "CaptureViewController.h"
 
 @interface ViewController : UIViewController
+{
+}
 
 @end
