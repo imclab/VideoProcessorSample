@@ -10,26 +10,10 @@
 
 @interface ViewController ()
 
-- (IBAction)demo1;
-- (IBAction)demo2;
-
 @end
 
 @implementation ViewController
 
-
-#pragma mark - --------------------------------------------------------------------------
-#pragma mark - Action
-
-- (IBAction)demo1
-{
-    LOG_METHOD;
-}
-
-- (IBAction)demo2
-{
-    LOG_METHOD;
-}
 
 - (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
 {
