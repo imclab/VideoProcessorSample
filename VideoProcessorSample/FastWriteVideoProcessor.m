@@ -10,8 +10,7 @@
 
 #define kVideoWidth 960
 #define kVideoHeight 540
-#define kRate 24
-#define kMaxCount 120
+#define kRate 30
 
 
 @interface FastWriteVideoProcessor()
@@ -30,6 +29,7 @@
 
     CGSize size_;
     BOOL   isRecording_;
+    NSInteger __block frame_;
 }
 
 @end
@@ -83,32 +83,22 @@
     return nil;
 }
 
+
 - (void)effect
 {
-    if (isRecording_)
-    {
-        [imageList_ addObject:imageBuffer_];
-        if ([imageList_ count] > kMaxCount)
-        {
-            isRecording_ = false;
-            [self write];
-        }
-        LOG(@"image count : %d", [imageList_ count]);
-    }
-    [_delegate drawCapture:imageBuffer_];
+    [_delegate drawCapture:imageBuffer_];    
 }
 
 
 - (void)write
 {
+    LOG(@"---------------------------");
     dispatch_queue_t dispatchQueue = dispatch_queue_create("mediaInputQueue", NULL);
-    int __block i = 0;
-
     [self stopRunning];
     [writerInput_ requestMediaDataWhenReadyOnQueue:dispatchQueue usingBlock:^{
         while ([writerInput_ isReadyForMoreMediaData])
         {
-            if(++i >= [imageList_ count])
+            if([imageList_ count] <= 1)
             {
                 [writerInput_ markAsFinished];
                 [videoWriter_ finishWritingWithCompletionHandler:^{
@@ -118,16 +108,22 @@
                 }];
                 return;
             }
-            CVPixelBufferRef buffer = (CVPixelBufferRef)[self pixelBufferFromCGImage:[[imageList_ objectAtIndex:i] CGImage] size:size_];
+            CVPixelBufferRef buffer = (CVPixelBufferRef)[self pixelBufferFromCGImage:[[imageList_ objectAtIndex:frame_] CGImage] size:size_];
             if (buffer)
             {
-                if([adaptor_ appendPixelBuffer:buffer withPresentationTime:CMTimeMake(i, kRate)]) LOG(@"Success : %d", i);
+                if([adaptor_ appendPixelBuffer:buffer withPresentationTime:CMTimeMake(frame_, kRate)])
+                {
+                    LOG(@"Success : %d", frame_);
+                    frame_ ++;
+                }
                 else
                 {
                     [self alert:@"Fail" message:nil btnName:@"OK"];
                 }
                 CFRelease(buffer);
+                buffer = nil;
             }
+            [imageList_ removeObjectAtIndex:0];
         }
     }];
 }
@@ -189,11 +185,38 @@
         imageBuffer_ = [UIImage imageWithCGImage:cgImage scale:1.0f orientation:UIImageOrientationRight];
 
         CVPixelBufferUnlockBaseAddress(buffer, 0); // unlock
-
         CGContextRelease(cgContext);
         CGImageRelease(cgImage);
 
         [self performSelectorOnMainThread:@selector(effect) withObject:nil waitUntilDone:NO];
+        
+        if (!isRecording_) return;
+        
+        [imageList_ addObject:imageBuffer_];
+            
+        if ([writerInput_ isReadyForMoreMediaData])
+        {
+            CVPixelBufferRef buffer = (CVPixelBufferRef)[self pixelBufferFromCGImage:[[imageList_ objectAtIndex:0] CGImage] size:size_];
+            if (buffer)
+            {
+                if([adaptor_ appendPixelBuffer:buffer withPresentationTime:CMTimeMake(frame_, kRate)])
+                {
+                    LOG(@"Success : %d", frame_);
+                    frame_ ++;
+                }
+                else
+                {
+                    [self alert:@"Fail" message:nil btnName:@"OK"];
+                }
+                CFRelease(buffer);
+                buffer = nil;
+            }
+            
+            [imageList_ removeObjectAtIndex:0];
+        }
+        LOG(@"count %i", [imageList_ count]);
+
+        
     }
 }
 
@@ -205,6 +228,7 @@
 {
     if (isRecording_) return;
 
+    frame_ = 0;
     size_ = CGSizeMake(kVideoWidth, kVideoHeight);
     url_ = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@_%@%@", NSTemporaryDirectory(), @"output", [NSDate date], @".mov"]];
 
@@ -235,7 +259,7 @@
 }
 
 - (void)stop
-{
+{    
     isRecording_ = false;
     [self write];
 }

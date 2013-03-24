@@ -20,6 +20,7 @@
 }
 
 - (IBAction)rec;
+- (IBAction)stop:(id)sender;
 
 @end
 
@@ -54,6 +55,11 @@
     [videoProcessor_ rec];
 }
 
+- (IBAction)stop:(id)sender
+{
+    [videoProcessor_ stop];
+}
+
 
 #pragma mark - --------------------------------------------------------------------------
 #pragma mark - life cycle
@@ -70,7 +76,7 @@
         videoProcessor_ = [[NormalVideoProcessor alloc] init];
         [(NormalVideoProcessor *)videoProcessor_ setDelegate:self];
     }
-    else
+    else if ( [_demo isEqualToString:@"Demo2"] )
     {
         videoProcessor_ = [[FastWriteVideoProcessor alloc] init];
         [(FastWriteVideoProcessor *)videoProcessor_ setDelegate:self];
