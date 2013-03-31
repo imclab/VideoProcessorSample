@@ -9,7 +9,6 @@
 #import "ViewController.h"
 
 @interface ViewController ()
-
 @end
 
 @implementation ViewController
@@ -20,7 +19,6 @@
     CaptureViewController * _vc = (CaptureViewController *)[segue destinationViewController];
     _vc.demo = [segue identifier];
 }
-
 
 #pragma mark - --------------------------------------------------------------------------
 #pragma mark - life cycle

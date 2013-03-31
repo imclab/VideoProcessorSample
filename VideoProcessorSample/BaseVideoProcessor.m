@@ -10,4 +10,26 @@
 
 @implementation BaseVideoProcessor
 
+- (BOOL)setup
+{
+    return YES;
+}
+
+- (void)rec
+{
+}
+
+- (void)stop
+{
+}
+
+- (void)startRunning
+{
+}
+
+- (void)stopRunning
+{
+}
+
+
 @end

@@ -8,6 +8,12 @@
 
 /* Begin PBXBuildFile section */
 		FE444EFE16C4328400C55855 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE444EFD16C4328400C55855 /* QuartzCore.framework */; };
+		FE546C2617087D34009183B8 /* btn_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = FE546C2417087D34009183B8 /* btn_bg.png */; };
+		FE546C2717087D34009183B8 /* btn_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE546C2517087D34009183B8 /* btn_bg@2x.png */; };
+		FE546C2A17087E4A009183B8 /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = FE546C2817087E4A009183B8 /* title.png */; };
+		FE546C2B17087E4A009183B8 /* title@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE546C2917087E4A009183B8 /* title@2x.png */; };
+		FE546C2E17087FB9009183B8 /* rec_btn_bg.png in Resources */ = {isa = PBXBuildFile; fileRef = FE546C2C17087FB9009183B8 /* rec_btn_bg.png */; };
+		FE546C2F17087FB9009183B8 /* rec_btn_bg@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = FE546C2D17087FB9009183B8 /* rec_btn_bg@2x.png */; };
 		FE59D5FC16D065F60069EA06 /* FastWriteVideoProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = FE59D5FB16D065F60069EA06 /* FastWriteVideoProcessor.m */; };
 		FE6A8E9016C2AAC00042C66A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE6A8E8F16C2AAC00042C66A /* UIKit.framework */; };
 		FE6A8E9216C2AAC00042C66A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE6A8E9116C2AAC00042C66A /* Foundation.framework */; };
@@ -27,12 +33,18 @@
 		FE6A8EC116C2CE440042C66A /* CoreVideo.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FE6A8EC016C2CE440042C66A /* CoreVideo.framework */; };
 		FE6A8EC416C2D41D0042C66A /* CaptureViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = FE6A8EC316C2D41D0042C66A /* CaptureViewController.m */; };
 		FE7816D616D10E9700709DA9 /* BaseVideoProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = FE7816D516D10E9700709DA9 /* BaseVideoProcessor.m */; };
-		FE82B6EE16C91FEC0044111D /* UIImage+Resize.m in Sources */ = {isa = PBXBuildFile; fileRef = FE82B6ED16C91FEC0044111D /* UIImage+Resize.m */; };
 		FE82ECAB16CE775F00AA04B8 /* NormalVideoProcessor.m in Sources */ = {isa = PBXBuildFile; fileRef = FE82ECAA16CE775F00AA04B8 /* NormalVideoProcessor.m */; };
+		FEF745F11700D9B0008F6F8F /* CoreImage.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = FEF745F01700D9B0008F6F8F /* CoreImage.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		FE444EFD16C4328400C55855 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
+		FE546C2417087D34009183B8 /* btn_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = btn_bg.png; sourceTree = "<group>"; };
+		FE546C2517087D34009183B8 /* btn_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "btn_bg@2x.png"; sourceTree = "<group>"; };
+		FE546C2817087E4A009183B8 /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
+		FE546C2917087E4A009183B8 /* title@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "title@2x.png"; sourceTree = "<group>"; };
+		FE546C2C17087FB9009183B8 /* rec_btn_bg.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = rec_btn_bg.png; sourceTree = "<group>"; };
+		FE546C2D17087FB9009183B8 /* rec_btn_bg@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "rec_btn_bg@2x.png"; sourceTree = "<group>"; };
 		FE59D5FA16D065F60069EA06 /* FastWriteVideoProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FastWriteVideoProcessor.h; sourceTree = "<group>"; };
 		FE59D5FB16D065F60069EA06 /* FastWriteVideoProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FastWriteVideoProcessor.m; sourceTree = "<group>"; };
 		FE6A8E8C16C2AAC00042C66A /* VideoProcessorSample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = VideoProcessorSample.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -60,10 +72,9 @@
 		FE6A8EC316C2D41D0042C66A /* CaptureViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CaptureViewController.m; sourceTree = "<group>"; };
 		FE7816D416D10E9700709DA9 /* BaseVideoProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseVideoProcessor.h; sourceTree = "<group>"; };
 		FE7816D516D10E9700709DA9 /* BaseVideoProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseVideoProcessor.m; sourceTree = "<group>"; };
-		FE82B6EC16C91FEC0044111D /* UIImage+Resize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = "UIImage+Resize.h"; path = "category/UIImage+Resize.h"; sourceTree = "<group>"; };
-		FE82B6ED16C91FEC0044111D /* UIImage+Resize.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = "UIImage+Resize.m"; path = "category/UIImage+Resize.m"; sourceTree = "<group>"; };
 		FE82ECA916CE775F00AA04B8 /* NormalVideoProcessor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NormalVideoProcessor.h; sourceTree = "<group>"; };
 		FE82ECAA16CE775F00AA04B8 /* NormalVideoProcessor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NormalVideoProcessor.m; sourceTree = "<group>"; };
+		FEF745F01700D9B0008F6F8F /* CoreImage.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreImage.framework; path = System/Library/Frameworks/CoreImage.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -71,6 +82,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				FEF745F11700D9B0008F6F8F /* CoreImage.framework in Frameworks */,
 				FE444EFE16C4328400C55855 /* QuartzCore.framework in Frameworks */,
 				FE6A8EC116C2CE440042C66A /* CoreVideo.framework in Frameworks */,
 				FE6A8EBE16C2B0700042C66A /* AssetsLibrary.framework in Frameworks */,
@@ -86,6 +98,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		FE546C2317087D34009183B8 /* resource */ = {
+			isa = PBXGroup;
+			children = (
+				FE546C2C17087FB9009183B8 /* rec_btn_bg.png */,
+				FE546C2D17087FB9009183B8 /* rec_btn_bg@2x.png */,
+				FE546C2817087E4A009183B8 /* title.png */,
+				FE546C2917087E4A009183B8 /* title@2x.png */,
+				FE546C2417087D34009183B8 /* btn_bg.png */,
+				FE546C2517087D34009183B8 /* btn_bg@2x.png */,
+			);
+			path = resource;
+			sourceTree = "<group>";
+		};
 		FE6A8E8316C2AAC00042C66A = {
 			isa = PBXGroup;
 			children = (
@@ -106,6 +131,7 @@
 		FE6A8E8E16C2AAC00042C66A /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				FEF745F01700D9B0008F6F8F /* CoreImage.framework */,
 				FE444EFD16C4328400C55855 /* QuartzCore.framework */,
 				FE6A8EC016C2CE440042C66A /* CoreVideo.framework */,
 				FE6A8EBD16C2B0700042C66A /* AssetsLibrary.framework */,
@@ -122,7 +148,7 @@
 		FE6A8E9516C2AAC00042C66A /* VideoProcessorSample */ = {
 			isa = PBXGroup;
 			children = (
-				FE82B6E816C91F250044111D /* category */,
+				FE546C2317087D34009183B8 /* resource */,
 				FE6A8EB216C2AF6B0042C66A /* model */,
 				FE6A8E9E16C2AAC00042C66A /* AppDelegate.h */,
 				FE6A8E9F16C2AAC00042C66A /* AppDelegate.m */,
@@ -161,15 +187,6 @@
 				FE7816D516D10E9700709DA9 /* BaseVideoProcessor.m */,
 			);
 			name = model;
-			sourceTree = "<group>";
-		};
-		FE82B6E816C91F250044111D /* category */ = {
-			isa = PBXGroup;
-			children = (
-				FE82B6EC16C91FEC0044111D /* UIImage+Resize.h */,
-				FE82B6ED16C91FEC0044111D /* UIImage+Resize.m */,
-			);
-			name = category;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -228,6 +245,12 @@
 				FE6A8EA416C2AAC00042C66A /* Default@2x.png in Resources */,
 				FE6A8EA616C2AAC00042C66A /* Default-568h@2x.png in Resources */,
 				FE6A8EA916C2AAC00042C66A /* MainStoryboard.storyboard in Resources */,
+				FE546C2617087D34009183B8 /* btn_bg.png in Resources */,
+				FE546C2717087D34009183B8 /* btn_bg@2x.png in Resources */,
+				FE546C2A17087E4A009183B8 /* title.png in Resources */,
+				FE546C2B17087E4A009183B8 /* title@2x.png in Resources */,
+				FE546C2E17087FB9009183B8 /* rec_btn_bg.png in Resources */,
+				FE546C2F17087FB9009183B8 /* rec_btn_bg@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -242,7 +265,6 @@
 				FE6A8EA016C2AAC00042C66A /* AppDelegate.m in Sources */,
 				FE6A8EAC16C2AAC00042C66A /* ViewController.m in Sources */,
 				FE6A8EC416C2D41D0042C66A /* CaptureViewController.m in Sources */,
-				FE82B6EE16C91FEC0044111D /* UIImage+Resize.m in Sources */,
 				FE82ECAB16CE775F00AA04B8 /* NormalVideoProcessor.m in Sources */,
 				FE59D5FC16D065F60069EA06 /* FastWriteVideoProcessor.m in Sources */,
 				FE7816D616D10E9700709DA9 /* BaseVideoProcessor.m in Sources */,

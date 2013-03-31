@@ -15,19 +15,15 @@
 #import <CoreMedia/CoreMedia.h>
 #import "BaseVideoProcessor.h"
 
-
 @protocol NormalVideoProcessorDelegate;
 
 @interface NormalVideoProcessor : BaseVideoProcessor <AVCaptureVideoDataOutputSampleBufferDelegate>
-{
-}
 
 @property (weak, nonatomic) id<NormalVideoProcessorDelegate> delegate;
 
 - (BOOL)setup;
 - (void)rec;
 - (void)stop;
-
 - (void)startRunning;
 - (void)stopRunning;
 

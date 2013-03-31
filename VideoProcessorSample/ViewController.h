@@ -11,7 +11,5 @@
 #import "CaptureViewController.h"
 
 @interface ViewController : UIViewController
-{
-}
 
 @end

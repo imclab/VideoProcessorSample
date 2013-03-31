@@ -14,52 +14,48 @@
                         <subviews>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="LPD-wK-NX7">
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="146" id="N40-UU-7uk"/>
+                                    <constraint firstAttribute="height" constant="55" id="gMx-cB-RT9"/>
+                                    <constraint firstAttribute="width" constant="246" id="n7B-5C-Ta3"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Demo1">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Normal - 5sec time limit - 24fps" backgroundImage="btn_bg.png">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="B8C-MM-ffl" kind="modal" identifier="Demo1" animates="NO" id="4wx-pX-bag"/>
+                                    <segue destination="B8C-MM-ffl" kind="modal" identifier="Normal" animates="NO" id="4wx-pX-bag"/>
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="6Kj-eT-TbO">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="qkQ-0h-ugI"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="Demo2">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="Fast - no time limit - 30fps" backgroundImage="btn_bg.png">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
                                     <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <connections>
-                                    <segue destination="B8C-MM-ffl" kind="modal" identifier="Demo2" animates="NO" id="El9-nb-2HH"/>
+                                    <segue destination="B8C-MM-ffl" kind="modal" identifier="Fast" animates="NO" id="El9-nb-2HH"/>
                                 </connections>
                             </button>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" text="VideoProcessorSample" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="oA1-xB-1fT">
-                                <constraints>
-                                    <constraint firstAttribute="height" constant="21" id="EYo-sH-YnQ"/>
-                                    <constraint firstAttribute="width" constant="254" id="fdQ-wT-4Rv"/>
-                                </constraints>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="20"/>
-                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
+                            <imageView opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" image="title.png" translatesAutoresizingMaskIntoConstraints="NO" id="KOY-Uf-OjA"/>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
-                            <constraint firstAttribute="bottom" secondItem="6Kj-eT-TbO" secondAttribute="bottom" constant="218" id="Chg-1S-BfD"/>
-                            <constraint firstItem="LPD-wK-NX7" firstAttribute="trailing" secondItem="6Kj-eT-TbO" secondAttribute="trailing" type="default" id="D4O-Fq-iLd"/>
+                            <constraint firstItem="KOY-Uf-OjA" firstAttribute="centerX" secondItem="LPD-wK-NX7" secondAttribute="centerX" type="default" id="8Y2-IY-SdL"/>
+                            <constraint firstItem="KOY-Uf-OjA" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="JZo-dv-Fqd"/>
                             <constraint firstItem="6Kj-eT-TbO" firstAttribute="leading" secondItem="LPD-wK-NX7" secondAttribute="leading" type="default" id="Ncw-to-eT7"/>
-                            <constraint firstItem="oA1-xB-1fT" firstAttribute="centerX" secondItem="LPD-wK-NX7" secondAttribute="centerX" type="default" id="WcQ-cz-PKy"/>
-                            <constraint firstItem="oA1-xB-1fT" firstAttribute="centerX" secondItem="3" secondAttribute="centerX" type="default" id="Ygp-9x-zcu"/>
-                            <constraint firstItem="oA1-xB-1fT" firstAttribute="top" secondItem="3" secondAttribute="top" constant="79" id="aNE-ww-E8W"/>
-                            <constraint firstItem="LPD-wK-NX7" firstAttribute="top" secondItem="3" secondAttribute="top" constant="193" id="wNf-iW-pGQ"/>
+                            <constraint firstAttribute="bottom" secondItem="6Kj-eT-TbO" secondAttribute="bottom" constant="65" id="fxu-MY-Gxq"/>
+                            <constraint firstItem="KOY-Uf-OjA" firstAttribute="top" secondItem="3" secondAttribute="top" constant="92" id="gp8-Ge-q9u"/>
+                            <constraint firstItem="LPD-wK-NX7" firstAttribute="trailing" secondItem="6Kj-eT-TbO" secondAttribute="trailing" type="default" id="sVD-qu-K8S"/>
+                            <constraint firstAttribute="bottom" secondItem="LPD-wK-NX7" secondAttribute="bottom" constant="144" id="wC4-9J-rFi"/>
                         </constraints>
                     </view>
                 </viewController>
@@ -78,9 +74,13 @@
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                             </view>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="la7-fj-95C">
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="55" id="RBF-gU-mVe"/>
+                                    <constraint firstAttribute="width" constant="100" id="a5V-RY-6yG"/>
+                                </constraints>
                                 <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="REC">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
+                                <state key="normal" title="REC" backgroundImage="rec_btn_bg.png">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
                                 <state key="highlighted">
@@ -90,29 +90,14 @@
                                     <action selector="rec" destination="B8C-MM-ffl" eventType="touchUpInside" id="d5h-7p-5g9"/>
                                 </connections>
                             </button>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="J7z-e8-bws">
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
-                                <state key="normal" title="STOP">
-                                    <color key="titleColor" red="0.19607843459999999" green="0.30980393290000002" blue="0.52156865600000002" alpha="1" colorSpace="calibratedRGB"/>
-                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <state key="highlighted">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
-                                </state>
-                                <connections>
-                                    <action selector="stop:" destination="B8C-MM-ffl" eventType="touchUpInside" id="pUh-ct-FoN"/>
-                                </connections>
-                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="BhQ-uV-MNg" firstAttribute="trailing" secondItem="42m-Bh-1QX" secondAttribute="trailing" type="default" id="25J-Pj-OIv"/>
+                            <constraint firstAttribute="bottom" secondItem="la7-fj-95C" secondAttribute="bottom" constant="18" id="3ky-83-HXe"/>
                             <constraint firstItem="BhQ-uV-MNg" firstAttribute="leading" secondItem="42m-Bh-1QX" secondAttribute="leading" type="default" id="GHy-44-1pY"/>
-                            <constraint firstAttribute="bottom" secondItem="la7-fj-95C" secondAttribute="bottom" constant="23" id="GYa-zD-lCv"/>
+                            <constraint firstItem="la7-fj-95C" firstAttribute="centerX" secondItem="BhQ-uV-MNg" secondAttribute="centerX" type="default" id="I76-xH-fdp"/>
                             <constraint firstItem="BhQ-uV-MNg" firstAttribute="bottom" secondItem="42m-Bh-1QX" secondAttribute="bottom" type="default" id="SUF-Jd-Ao5"/>
-                            <constraint firstItem="la7-fj-95C" firstAttribute="leading" secondItem="42m-Bh-1QX" secondAttribute="leading" constant="94" id="TWs-am-c2S"/>
-                            <constraint firstAttribute="trailing" secondItem="J7z-e8-bws" secondAttribute="trailing" constant="94" id="ePX-kf-Xaf"/>
-                            <constraint firstItem="la7-fj-95C" firstAttribute="baseline" secondItem="J7z-e8-bws" secondAttribute="baseline" type="default" id="u1E-WU-aMg"/>
                             <constraint firstItem="BhQ-uV-MNg" firstAttribute="top" secondItem="42m-Bh-1QX" secondAttribute="top" type="default" id="vYX-U5-R6M"/>
                         </constraints>
                     </view>
@@ -123,15 +108,19 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="nml-gn-7u9" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="792" y="10"/>
+            <point key="canvasLocation" x="664" y="2"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="btn_bg.png" width="246" height="55"/>
+        <image name="rec_btn_bg.png" width="100" height="55"/>
+        <image name="title.png" width="262" height="96"/>
+    </resources>
     <classes>
         <class className="CaptureViewController" superclassName="UIViewController">
             <source key="sourceIdentifier" type="project" relativePath="./Classes/CaptureViewController.h"/>
             <relationships>
                 <relationship kind="action" name="rec"/>
-                <relationship kind="action" name="stop:"/>
                 <relationship kind="outlet" name="capture_" candidateClass="UIView"/>
                 <relationship kind="outlet" name="recBtn_" candidateClass="UIButton"/>
             </relationships>

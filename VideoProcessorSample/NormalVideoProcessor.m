@@ -11,8 +11,7 @@
 #define kVideoWidth 960
 #define kVideoHeight 540
 #define kRate 24
-#define kMaxCount 120
-
+#define kMaxCount 150
 
 @interface NormalVideoProcessor()
 {
@@ -27,9 +26,7 @@
     NSMutableArray * imageList_;
     UIImage        * imageBuffer_;
     NSURL          * url_;
-
     CGSize size_;
-    BOOL   isRecording_;
 }
 
 @end
@@ -42,7 +39,7 @@
     self = [super init];
     if (self)
     {
-        imageList_ = [[NSMutableArray alloc] init];
+        imageList_ = [[NSMutableArray array] mutableCopy];
     }
     return self;
 }
@@ -69,7 +66,6 @@
     if ([captureSession_ canAddOutput:videoOut_]) [captureSession_ addOutput:videoOut_];
 	videoConnection_ = [videoOut_ connectionWithMediaType:AVMediaTypeVideo];
     videoConnection_.videoMinFrameDuration = CMTimeMake(1, kRate);
-
     return YES;
 }
 
@@ -83,28 +79,13 @@
     return nil;
 }
 
-- (void)effect
-{
-    if (isRecording_)
-    {
-        [imageList_ addObject:imageBuffer_];
-        if ([imageList_ count] > kMaxCount)
-        {
-            isRecording_ = false;
-            [self write];
-        }
-        LOG(@"image count : %d", [imageList_ count]);
-    }
-    [_delegate drawCapture:imageBuffer_];
-}
-
-
 - (void)write
 {
     dispatch_queue_t dispatchQueue = dispatch_queue_create("mediaInputQueue", NULL);
     int __block i = 0;
-
     [self stopRunning];
+    
+    // write AVAssetWriterInputPixelBufferAdaptor
     [writerInput_ requestMediaDataWhenReadyOnQueue:dispatchQueue usingBlock:^{
         while ([writerInput_ isReadyForMoreMediaData])
         {
@@ -158,8 +139,35 @@
     return pxbuffer;
 }
 
-- (void)startRunning { if (!isRecording_) [captureSession_ startRunning]; }
-- (void)stopRunning { if (isRecording_) [captureSession_ stopRunning]; }
+- (void)startRunning { if (!self.isRecording) [captureSession_ startRunning]; }
+- (void)stopRunning { if (self.isRecording) [captureSession_ stopRunning]; }
+
+
+#pragma mark - --------------------------------------------------------------------------
+#pragma mark - Effect
+
+
+- (void)effect
+{
+
+    //----------------------------------
+    // TODO : effect
+    //----------------------------------
+
+    // push Array & check
+    if (self.isRecording)
+    {
+        [imageList_ addObject:imageBuffer_];
+        if ([imageList_ count] > kMaxCount)
+        {
+            self.isRecording = false;
+            [self write];
+        }
+    }
+
+    // show capture
+    [_delegate drawCapture:imageBuffer_];
+}
 
 
 #pragma mark - --------------------------------------------------------------------------
@@ -203,7 +211,7 @@
 
 - (void)rec
 {
-    if (isRecording_) return;
+    if (self.isRecording) return;
 
     size_ = CGSizeMake(kVideoWidth, kVideoHeight);
     url_ = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@%@_%@%@", NSTemporaryDirectory(), @"output", [NSDate date], @".mov"]];
@@ -231,18 +239,14 @@
     [videoWriter_ addInput:writerInput_];
     [videoWriter_ startWriting];
     [videoWriter_ startSessionAtSourceTime:kCMTimeZero];
-    isRecording_ = YES;
+    self.isRecording = YES;
 }
 
 - (void)stop
 {
-    isRecording_ = false;
+    self.isRecording = false;
     [self write];
 }
-
-
-#pragma mark - --------------------------------------------------------------------------
-#pragma mark - utils
 
 - (void)alert:(NSString *)title message:(NSString *)message btnName:(NSString *)btnName
 {
@@ -257,7 +261,6 @@
                                      [self alert:@"Save!" message:nil btnName:@"OK"];
                                  }];
 }
-
 
 
 @end

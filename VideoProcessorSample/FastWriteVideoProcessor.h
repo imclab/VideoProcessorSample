@@ -18,15 +18,12 @@
 @protocol FastWriteVideoProcessorDelegate;
 
 @interface FastWriteVideoProcessor : BaseVideoProcessor <AVCaptureVideoDataOutputSampleBufferDelegate>
-{
-}
 
 @property (weak, nonatomic) id<FastWriteVideoProcessorDelegate> delegate;
 
 - (BOOL)setup;
 - (void)rec;
 - (void)stop;
-
 - (void)startRunning;
 - (void)stopRunning;
 

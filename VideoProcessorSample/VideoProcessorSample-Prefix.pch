@@ -11,7 +11,6 @@
 #ifdef __OBJC__
     #import <UIKit/UIKit.h>
     #import <Foundation/Foundation.h>
-    #import "UIImage+Resize.h"
 #endif
 
 // debug
@@ -19,14 +18,15 @@
 #define LOG(...) NSLog(__VA_ARGS__)
 #define LOG_METHOD NSLog(@"[METHOD] %@::%@", NSStringFromClass([self class]), NSStringFromSelector(_cmd))
 #define LOG_LINE() NSLog(@"[LINE NUM] %d",__LINE__)
+#define RECT(...) NSLog(@"[Rect] %@", NSStringFromRect(__VA_ARGS__))
 #else
-#define LOG(...);
-#define LOG_METHOD;
-#define LOG_LINE();
+#define LOG(...)
+#define LOG_METHOD
+#define LOG_LINE()
+#define RECT(...)
 #endif
 
 // iOS
 #define VERSION [[[UIDevice currentDevice] systemVersion] floatValue]
 #define IS_OS6 (VERSION >= 6.0)
-
 #define IS_RETINA ([[UIScreen mainScreen] scale] == 2.0)

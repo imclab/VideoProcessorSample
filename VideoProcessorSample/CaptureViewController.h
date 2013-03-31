@@ -11,8 +11,6 @@
 #import "FastWriteVideoProcessor.h"
 
 @interface CaptureViewController : UIViewController <NormalVideoProcessorDelegate, FastWriteVideoProcessorDelegate>
-{
-}
 
 @property NSString * demo;
 

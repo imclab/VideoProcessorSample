@@ -20,7 +20,6 @@
 }
 
 - (IBAction)rec;
-- (IBAction)stop:(id)sender;
 
 @end
 
@@ -31,9 +30,16 @@
 {
     self = [super initWithNibName:nibNameOrNil bundle:nibBundleOrNil];
     if (self) {
-        // Custom initialization
     }
     return self;
+}
+
+#pragma mark - --------------------------------------------------------------------------
+#pragma mark - updateUI
+
+- (void)setTitle:(NSString *)title
+{
+    [recBtn_ setTitle:title forState:UIControlStateNormal];
 }
 
 - (void)drawCapture:(UIImage *)image
@@ -48,16 +54,22 @@
 
 
 #pragma mark - --------------------------------------------------------------------------
-#pragma mark - Action
+#pragma mark - IBAction
 
 - (IBAction)rec
 {
-    [videoProcessor_ rec];
-}
-
-- (IBAction)stop:(id)sender
-{
-    [videoProcessor_ stop];
+    if (![videoProcessor_ isRecording])
+    {
+        LOG(@"start recording");
+        [videoProcessor_ rec];
+        [self setTitle:@"STOP"];
+    }
+    else
+    {
+        LOG(@"stop recording");
+        [videoProcessor_ stop];
+        [self setTitle:@"REC"];
+    }
 }
 
 
@@ -67,16 +79,15 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-	// Do any additional setup after loading the view.
 
     layer_ = [CALayer layer];
 
-    if ( [_demo isEqualToString:@"Demo1"] )
+    if ( [_demo isEqualToString:@"Normal"] )
     {
         videoProcessor_ = [[NormalVideoProcessor alloc] init];
         [(NormalVideoProcessor *)videoProcessor_ setDelegate:self];
     }
-    else if ( [_demo isEqualToString:@"Demo2"] )
+    else if ( [_demo isEqualToString:@"Fast"] )
     {
         videoProcessor_ = [[FastWriteVideoProcessor alloc] init];
         [(FastWriteVideoProcessor *)videoProcessor_ setDelegate:self];
@@ -88,7 +99,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    [videoProcessor_ stop];
+    [self rec];
 }
 
 @end

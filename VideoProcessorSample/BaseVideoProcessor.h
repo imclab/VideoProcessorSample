@@ -11,10 +11,11 @@
 
 @interface BaseVideoProcessor : NSObject
 
+@property BOOL isRecording;
+
 - (BOOL)setup;
 - (void)rec;
 - (void)stop;
-
 - (void)startRunning;
 - (void)stopRunning;
 
