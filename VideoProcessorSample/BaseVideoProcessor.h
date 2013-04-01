@@ -18,5 +18,6 @@
 - (void)stop;
 - (void)startRunning;
 - (void)stopRunning;
+- (void)remove;
 
 @end

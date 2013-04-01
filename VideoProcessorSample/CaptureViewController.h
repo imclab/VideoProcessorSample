@@ -9,6 +9,7 @@
 #import <UIKit/UIKit.h>
 #import "NormalVideoProcessor.h"
 #import "FastWriteVideoProcessor.h"
+#import "ViewController.h"
 
 @interface CaptureViewController : UIViewController <NormalVideoProcessorDelegate, FastWriteVideoProcessorDelegate>
 

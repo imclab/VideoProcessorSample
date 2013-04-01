@@ -152,14 +152,22 @@
 #pragma mark - --------------------------------------------------------------------------
 #pragma mark - Effect
 
-- (void)effect
+- (UIImage *)effect
 {
 
     //----------------------------------
     // TODO : effect
     //----------------------------------
 
+    
     // show capture
+    [self performSelectorOnMainThread:@selector(draw) withObject:nil waitUntilDone:NO];
+    
+    return imageBuffer_;
+}
+
+- (void)draw
+{
     [_delegate drawCapture:imageBuffer_];
 }
 
@@ -188,16 +196,16 @@
         CGColorSpaceRelease(colorSpace);
         cgImage = CGBitmapContextCreateImage(cgContext);
 
-        imageBuffer_ = [UIImage imageWithCGImage:cgImage scale:1.0f orientation:UIImageOrientationRight];
+        imageBuffer_ = [UIImage imageWithCGImage:cgImage scale:[UIScreen mainScreen].scale orientation:UIImageOrientationRight];
 
         CVPixelBufferUnlockBaseAddress(buffer, 0); // unlock
         CGContextRelease(cgContext);
         CGImageRelease(cgImage);
 
-        [self performSelectorOnMainThread:@selector(effect) withObject:nil waitUntilDone:NO];
+        imageBuffer_ = [self effect];
 
         if (!self.isRecording) return;
-
+        
         [imageList_ addObject:imageBuffer_];
 
         // write AVAssetWriterInputPixelBufferAdaptor
@@ -206,14 +214,8 @@
             CVPixelBufferRef buffer = (CVPixelBufferRef)[self pixelBufferFromCGImage:[[imageList_ objectAtIndex:0] CGImage] size:size_];
             if (buffer)
             {
-                if([adaptor_ appendPixelBuffer:buffer withPresentationTime:CMTimeMake(frame_, kRate)])
-                {
-                    frame_ ++;
-                }
-                else
-                {
-                    [self alert:@"Fail" message:nil btnName:@"OK"];
-                }
+                if([adaptor_ appendPixelBuffer:buffer withPresentationTime:CMTimeMake(frame_, kRate)]) frame_ ++;
+                else [self alert:@"Fail" message:nil btnName:@"OK"];
                 CFRelease(buffer);
                 buffer = nil;
             }
@@ -264,7 +266,7 @@
 
 - (void)stop
 {
-    self.isRecording = false;
+    self.isRecording = NO;
     [self write];
 }
 
@@ -282,5 +284,8 @@
                                  }];
 }
 
+- (void)remove
+{
+}
 
 @end

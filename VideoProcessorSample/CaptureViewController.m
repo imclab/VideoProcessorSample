@@ -12,6 +12,7 @@
 {
     IBOutlet UIView   * capture_;
     IBOutlet UIButton * recBtn_;
+    IBOutlet UIButton * backBtn_;
 
     NormalVideoProcessor    * normalVideoProcessor_;
     FastWriteVideoProcessor * fastWriterVideoProcessor_;
@@ -34,11 +35,18 @@
     return self;
 }
 
+- (void)prepareForSegue:(UIStoryboardSegue *)segue sender:(id)sender
+{
+    
+    ViewController * _vc = (ViewController *)[segue destinationViewController];
+}
+
 #pragma mark - --------------------------------------------------------------------------
 #pragma mark - updateUI
 
 - (void)setTitle:(NSString *)title
 {
+    [videoProcessor_ remove];
     [recBtn_ setTitle:title forState:UIControlStateNormal];
 }
 
@@ -60,17 +68,28 @@
 {
     if (![videoProcessor_ isRecording])
     {
-        LOG(@"start recording");
-        [videoProcessor_ rec];
-        [self setTitle:@"STOP"];
+        [self processStart];
     }
     else
     {
-        LOG(@"stop recording");
-        [videoProcessor_ stop];
-        [self setTitle:@"REC"];
+        [self processStop];
     }
 }
+
+- (void)processStart
+{
+    LOG(@"start recording");
+    [videoProcessor_ rec];
+    [self setTitle:@"STOP"];
+}
+
+- (void)processStop
+{
+    LOG(@"stop recording");
+    [videoProcessor_ stop];
+    [self setTitle:@"REC"];
+}
+
 
 
 #pragma mark - --------------------------------------------------------------------------
@@ -99,7 +118,7 @@
 - (void)didReceiveMemoryWarning
 {
     [super didReceiveMemoryWarning];
-    [self rec];
+    [self processStop];
 }
 
 @end

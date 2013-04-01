@@ -103,11 +103,9 @@
             if (buffer)
             {
                 if([adaptor_ appendPixelBuffer:buffer withPresentationTime:CMTimeMake(i, kRate)]) LOG(@"Success : %d", i);
-                else
-                {
-                    [self alert:@"Fail" message:nil btnName:@"OK"];
-                }
+                else [self alert:@"Fail" message:nil btnName:@"OK"];
                 CFRelease(buffer);
+                buffer = nil;
             }
         }
     }];
@@ -160,7 +158,7 @@
         [imageList_ addObject:imageBuffer_];
         if ([imageList_ count] > kMaxCount)
         {
-            self.isRecording = false;
+            self.isRecording = NO;
             [self write];
         }
     }
@@ -194,7 +192,7 @@
         CGColorSpaceRelease(colorSpace);
         cgImage = CGBitmapContextCreateImage(cgContext);
 
-        imageBuffer_ = [UIImage imageWithCGImage:cgImage scale:1.0f orientation:UIImageOrientationRight];
+        imageBuffer_ = [UIImage imageWithCGImage:cgImage scale:[UIScreen mainScreen].scale orientation:UIImageOrientationRight];
 
         CVPixelBufferUnlockBaseAddress(buffer, 0); // unlock
 
@@ -244,7 +242,7 @@
 
 - (void)stop
 {
-    self.isRecording = false;
+    self.isRecording = NO;
     [self write];
 }
 
@@ -260,6 +258,10 @@
                                  completionBlock:^(NSURL *assetURL, NSError *error){
                                      [self alert:@"Save!" message:nil btnName:@"OK"];
                                  }];
+}
+
+- (void)remove
+{
 }
 
 

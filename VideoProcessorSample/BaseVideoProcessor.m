@@ -31,5 +31,8 @@
 {
 }
 
+- (void)remove
+{
+}
 
 @end
