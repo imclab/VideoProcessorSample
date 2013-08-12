@@ -20,12 +20,18 @@
     AVCaptureDeviceInput                 * videoIn_;
     AVCaptureVideoDataOutput             * videoOut_;
     AVAssetWriterInputPixelBufferAdaptor * adaptor_;
+    AVCaptureDevice                      * videoDevice_;
 
     NSMutableArray * imageList_;
     UIImage        * imageBuffer_;
     NSURL          * url_;
     CGSize size_;
     NSInteger __block frame_;
+
+    BOOL isCameraBack_;
+    BOOL isStartRunning_;
+    BOOL isTorchOn_;
+
 }
 
 @end
@@ -39,6 +45,10 @@
     if (self)
     {
         imageList_ = [[NSMutableArray array] mutableCopy];
+        isCameraBack_ = YES;
+        isStartRunning_ = NO;
+        isTorchOn_ = NO;
+
     }
     return self;
 }
@@ -52,7 +62,10 @@
     captureSession_ = [[AVCaptureSession alloc] init];
     [captureSession_ setSessionPreset:AVCaptureSessionPresetiFrame960x540];
 
-    videoIn_ = [[AVCaptureDeviceInput alloc] initWithDevice:[self videoDeviceWithPosition:AVCaptureDevicePositionBack] error:nil];
+    if (isCameraBack_) videoDevice_ = [self videoDeviceWithPosition:AVCaptureDevicePositionBack];
+    else videoDevice_ = [self videoDeviceWithPosition:AVCaptureDevicePositionFront];
+
+    videoIn_ = [[AVCaptureDeviceInput alloc] initWithDevice:videoDevice_ error:nil];
     if ([captureSession_ canAddInput:videoIn_]) [captureSession_ addInput:videoIn_];
 
 	videoOut_ = [[AVCaptureVideoDataOutput alloc] init];
@@ -221,7 +234,6 @@
 
             [imageList_ removeObjectAtIndex:0];
         }
-        //LOG(@"count %i", [imageList_ count]);
     }
 }
 
@@ -267,6 +279,54 @@
 {
     _isRecording = NO;
     [self write];
+}
+
+- (void)cameraMode:(VideoProcessorCameraMode)type
+{
+    switch (type)
+    {
+        case 0: isCameraBack_ = YES; break;
+        case 1: isCameraBack_ = NO; break;
+        case 2: isCameraBack_ =! isCameraBack_; break;
+    }
+    [self stopRunning];
+    [self setup];
+    [self startRunning];
+}
+
+- (void)setFocusWithSize:(CGSize)drawViewSize focusPoint:(CGPoint)point
+{
+    CGPoint p = CGPointMake(point.y / drawViewSize.height, 1.0 - point.x / drawViewSize.width);
+    if ([videoDevice_ isFocusPointOfInterestSupported] && [videoDevice_ isFocusModeSupported:AVCaptureFocusModeAutoFocus])
+    {
+        [videoDevice_ lockForConfiguration:nil];
+        videoDevice_.focusPointOfInterest = p;
+        videoDevice_.focusMode = AVCaptureFocusModeAutoFocus;
+        [videoDevice_ unlockForConfiguration];
+    }
+
+    - (void)torchMode:(VideoProcessorTorchMode)type
+    {
+        if (videoDevice_.position == AVCaptureDevicePositionFront) return;
+        [videoDevice_ lockForConfiguration:nil];
+        switch (type)
+        {
+            case 0:
+                videoDevice_.torchMode = AVCaptureTorchModeOff;
+                isTorchOn_ = NO;
+                break;
+            case 1:
+                videoDevice_.torchMode = AVCaptureTorchModeOn;
+                isTorchOn_ = YES;
+                break;
+            case 2:
+                if(isTorchOn_) videoDevice_.torchMode = AVCaptureTorchModeOff;
+                else videoDevice_.torchMode = AVCaptureTorchModeOn;
+                isTorchOn_ =! isTorchOn_;
+                break;
+        }
+        [videoDevice_ unlockForConfiguration];
+    }
 }
 
 - (void)alert:(NSString *)title message:(NSString *)message btnName:(NSString *)btnName

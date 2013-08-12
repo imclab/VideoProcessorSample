@@ -13,25 +13,41 @@
 #import <CoreVideo/CoreVideo.h>
 #import <CoreMedia/CoreMedia.h>
 
+typedef NS_ENUM(NSInteger, VideoProcessorCameraMode)
+{
+    VideoProcessorCameraModeBack = 0,
+    VideoProcessorCameraModeFront,
+    VideoProcessorCameraModeReverse
+};
+
+typedef NS_ENUM(NSInteger, VideoProcessorTorchMode)
+{
+    VideoProcessorTorchModeOff = 0,
+    VideoProcessorTorchModeOn,
+    VideoProcessorTorchModeReverse
+};
+
 @protocol VideoProcessorDelegate;
 
 @interface VideoProcessor : NSObject <AVCaptureVideoDataOutputSampleBufferDelegate>
 
 @property (weak, nonatomic) id<VideoProcessorDelegate> delegate;
-
 @property BOOL isRecording;
+
 - (BOOL)setup;
-- (void)rec;
-- (void)stop;
 - (void)startRunning;
 - (void)stopRunning;
 
-
+- (void)take;
+- (void)cameraMode:(VideoProcessorCameraMode)type;
+- (void)setFocusWithSize:(CGSize)drawViewSize focusPoint:(CGPoint)point;
+- (void)torchMode:(VideoProcessorTorchMode)type;
 
 @end
 
 @protocol VideoProcessorDelegate <NSObject>
 
-- (void)drawCapture:(UIImage *)image;
+- (void)videoProcessorDrawCapture:(UIImage *)image;
+- (void)videoProcessorTakeCapture:(UIImage *)image;
 
 @end
